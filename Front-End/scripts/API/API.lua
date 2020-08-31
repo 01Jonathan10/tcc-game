@@ -1,0 +1,62 @@
+API.server_domain = "http://127.0.0.1:8000"
+
+API.channel = love.thread.getChannel("taskChannel")
+API.r_channel = love.thread.getChannel("responseChannel")
+API.http = require("socket.http")
+local ltn12 = require("ltn12")
+
+function API.run_thread()
+	API.thread = love.thread.newThread("scripts/API/API_Server.lua")
+	API.thread:start()
+end
+
+function API.post_request(url, data)
+	local url = url or ""
+	local data = data or "{}"
+	local response = {status = nil}
+	
+	local headers = {
+		["Content-Type"] = "application/json",
+		["Content-Length"] = data:len()
+	}
+	if API.token then headers.Authorization = "Token "..API.token end
+			
+	_, response.status, _ = API.http.request {
+		url = API.server_domain..url,
+		method = "POST",
+		headers = headers,
+		
+		source = ltn12.source.string(data),
+		sink = ltn12.sink.table(response)
+	}
+	
+	return response
+end
+
+function API.get_request(url)
+	local url = url or ""
+	local response = {status = nil}
+	
+	local headers = {}
+	if API.token then headers.Authorization = "Token "..API.token end
+			
+	_, response.status, _ = API.http.request {
+		url = API.server_domain..url,
+		method = "GET",
+		headers = headers,
+		
+		sink = ltn12.sink.table(response)
+	}
+	
+	return response
+end
+
+function API.get_token(data)	
+	API.channel:push({message = "post", url="/api/get-token/", body=data})
+	GameController.task_queue = GameController.task_queue + 1
+	return nil
+end
+
+function API.error()
+	-- love.event.push('quit')
+end
