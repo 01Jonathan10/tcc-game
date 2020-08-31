@@ -1,0 +1,14 @@
+{
+	"name": "Evil Bat",
+	"stats": {
+		"hp": 70,
+		"atk": 15,
+		"def": 15,
+		"matk": 15,
+		"mdef": 15,
+		"luck": 0,
+		"mov": 4,
+		"speed": 5
+	},
+	"skills": [1]
+}
