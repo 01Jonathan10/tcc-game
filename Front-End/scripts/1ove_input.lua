@@ -32,12 +32,16 @@ function love.keypressed(key)
 	
 	if key == "\'" and GameController.state == Constants.EnumGameState.MENU then
 		print('reload')
+		local reloading = 'Menu_Items'
+		
 		local menu = GameController.menu
-		package.loaded['1ove_input'] = nil
-		package.loaded.Char_Player = nil
-		Player = nil
+		package.loaded[reloading] = nil
 		love.filesystem.setRequirePath( 'scripts/?.lua' )
-		require("Char_Player")
+		require(reloading)
+
+		GameController.menu = menu
+
+		package.loaded['1ove_input'] = nil
 		require("1ove_input")
 	end
 end
