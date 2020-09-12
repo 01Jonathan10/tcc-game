@@ -20,7 +20,7 @@ function MainMenu:show()
 	local player = GameController.player
 	
 	View.draw(self.bg_img,0,0)
-	player:draw_model(350,80,0.8,self.frame)
+	player:draw_model(350,60,0.8,self.frame)
 	
 	View.print(player.name, 350, 10)
 	View.print(player.class.name..", Level "..player.level, 350, 70, 0, 1/2)
