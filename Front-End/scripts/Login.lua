@@ -10,6 +10,8 @@ function Login:new(obj)
 	obj.login_box = Textbox:new("login",390,310,500,50, {1,0.5,0.5})
 	obj.pass_box = Textbox:new("password",390,450,500,50, {1,0.5,0.5})
 	
+	obj.login_box:trigger()
+	
 	obj.timer = 0
 	
 	return obj
