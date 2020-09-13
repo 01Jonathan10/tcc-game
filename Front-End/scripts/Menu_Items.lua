@@ -3,6 +3,8 @@ ItemsMenu.__index = ItemsMenu
 
 function ItemsMenu:setup()
 	self.submenu = Constants.EnumSubmenu.ITEMS
+	
+	self.bg_img = love.graphics.newImage("assets/menus/MenuItems.png")
 		
 	API.get_player_items()
 	
@@ -41,6 +43,13 @@ function ItemsMenu:setup()
 	GameController.player:load_model()
 	
 	View.setLineWidth(3)
+	
+	self.buttons = {
+		change_mode = {
+			x = 440, y = 380, r=35, text = {{0,0,0,1}, ("Cosmetic"):translate()}, form="circle",
+			click = function()  end
+		}
+	}
 end
 
 function ItemsMenu:show()
@@ -48,24 +57,17 @@ function ItemsMenu:show()
 	local equip_list = GameController.player.equipment
 	if self.cosmetic_mode then equip_list = GameController.player.cosmetics end
 	local item
-
-	View.line(480,0,480,720)
-	View.line(0,480,480,480)
-	View.line(480,420, 1280, 420)
-	View.line(920,0, 920, 420)
 	
-	GameController.player:draw_model(35,0,0.55,self.frame)
+	View.draw(self.bg_img, 0, 0, 0, 2/3)
+	
+	GameController.player:draw_model(35,10,0.55,self.frame)
 	View.print(GameController.player.name, 20, 420, 0, 0.5)
 	View.print(GameController.player.class.name..", Level "..GameController.player.level, 20, 450, 0, 0.3)
 	View.printf(GameController.player.gold.." G", -20, 420, 1600, "right", 0, 0.3)
 	View.printf(GameController.player.diamonds.." Diamonds", -20, 450, 1600, "right", 0, 0.3)
 	
-	View.circle("fill", 440, 380, 35)
-	if self.cosmetic_mode then
-		View.printf({{0,0,0,1}, "Equipment"}, 405, 375, 350, "center", 0, 1/5)
-	else
-		View.printf({{0,0,0,1}, "Cosmetics"}, 405, 375, 350, "center", 0, 1/5)
-	end
+	
+	self:draw_btn(self.buttons.change_mode)
 	
 	View.printf(("Equip Menu"):translate(), 490, 15, 614, "center", 0, 35/50)
 	View.print(GameController.player.name, 490, 65, 0, 15/50)

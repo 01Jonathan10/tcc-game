@@ -22,7 +22,7 @@ function love.keypressed(key)
 		if key == "tab" then
 			Textbox.list[Textbox.active_box.index%#Textbox.list + 1]:trigger()
 		else
-			Textbox.active_box:keypressed(key) 
+			Textbox.active_box:keypressed(key)
 		end
 	end
 
@@ -32,7 +32,7 @@ function love.keypressed(key)
 	
 	if key == "\'" and GameController.state == Constants.EnumGameState.MENU then
 		print('reload')
-		local reloading = 'Menu_MainMenu'
+		local reloading = 'Menu_Items'
 		
 		local menu = GameController.menu
 		package.loaded[reloading] = nil

@@ -36,9 +36,15 @@ function Menu:draw_buttons()
 end
 
 function Menu:draw_btn(btn)
-	local size = math.min(btn.w, btn.h)/150
-	View.rectangle("fill", btn.x, btn.y, btn.w, btn.h)
-	View.printf(btn.text, btn.x, btn.y + btn.h/3, btn.w/size, "center", 0, size)
+	if btn.form == "circle" then
+		local size = btn.r/175
+		View.circle("fill", btn.x, btn.y, btn.r)
+		View.printf(btn.text, btn.x - btn.r, btn.y - btn.r/7, 2*btn.r/size, "center", 0, size)
+	else
+		local size = math.min(btn.w, btn.h)/150
+		View.rectangle("fill", btn.x, btn.y, btn.w, btn.h)
+		View.printf(btn.text, btn.x, btn.y + btn.h/3, btn.w/size, "center", 0, size)
+	end
 end
 
 function Menu:update(dt)
@@ -73,9 +79,15 @@ function Menu:mousepressed(x,y,k)
 	end
 	
 	for _, btn in ipairs(self.buttons) do
-		if x >= btn.x and x <= btn.x + btn.w and y >= btn.y and y <= btn.y + btn.h and not btn.disabled then
-			btn.click()
-			return
+		if not btn.disabled then
+			if btn.form == "circle" then
+				
+			else
+				if x >= btn.x and x <= btn.x + btn.w and y >= btn.y and y <= btn.y + btn.h and not btn.disabled then
+					btn.click()
+					return
+				end
+			end
 		end
 	end
 	
