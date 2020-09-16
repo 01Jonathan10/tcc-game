@@ -1,6 +1,7 @@
 Item = {}
 Item.__index = Item
 Item.icons = {}
+Item.border_img = love.graphics.newImage("assets/menus/ItemBorder.png")
 
 function Item:new(obj)
 	local obj = obj or {id=0, kind=0}
@@ -13,8 +14,15 @@ function Item:new(obj)
 end
 
 function Item:draw_icon(x,y, size)
-	View.rectangle("line", x, y, size, size, 5)
-	View.draw(Item.icons[self.kind], x, y, 0, size/500)
+	if self == Constants.NoneItem then
+		View.setColor(1,1,1)
+		View.draw(Item.border_img, x, y, 0, size/100)
+	else
+		View.setColor(1,0,0)
+		View.draw(Item.border_img, x, y, 0, size/100)
+		View.setColor(1,1,1)
+		View.draw(Item.icons[self.kind], x, y, 0, size/500)
+	end
 end
 
 function Item.load_icons(list)

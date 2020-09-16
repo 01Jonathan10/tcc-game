@@ -78,14 +78,19 @@ function Menu:mousepressed(x,y,k)
 		return
 	end
 	
-	for _, btn in ipairs(self.buttons) do
-		if not btn.disabled then
-			if btn.form == "circle" then
-				
-			else
-				if x >= btn.x and x <= btn.x + btn.w and y >= btn.y and y <= btn.y + btn.h and not btn.disabled then
-					btn.click()
-					return
+	if k == 1 then
+		for _, btn in ipairs(self.buttons) do
+			if not btn.disabled then
+				if btn.form == "circle" then
+					if (btn.x-x)*(btn.x-x) + (btn.y-y)*(btn.y-y) <= btn.r*btn.r and not btn.disabled then
+						btn.click()
+						return
+					end
+				else
+					if x >= btn.x and x <= btn.x + btn.w and y >= btn.y and y <= btn.y + btn.h and not btn.disabled then
+						btn.click()
+						return
+					end
 				end
 			end
 		end
