@@ -4,7 +4,9 @@ ItemsMenu.__index = ItemsMenu
 function ItemsMenu:setup()
 	self.submenu = Constants.EnumSubmenu.ITEMS
 	
-	self.bg_img = love.graphics.newImage("assets/menus/MenuItems.png")
+	self.sprites = {
+		bg_img = love.graphics.newImage("assets/menus/MenuItems.png")
+	}
 		
 	API.get_player_items()
 	
@@ -45,60 +47,95 @@ function ItemsMenu:setup()
 	View.setLineWidth(3)
 	
 	self.buttons = {
-		change_mode = {
+		{
+			-- Change Mode
 			x = 440, y = 380, r=35, text = {{0,0,0,1}, ("Cosmetic"):translate()}, form="circle",
-			click = function()  end
+			click = function() 
+				self.cosmetic_mode = not self.cosmetic_mode
+				self.category = nil
+				self.buttons[5].disabled = self.cosmetic_mode
+				self.buttons[6].disabled = self.cosmetic_mode
+			end
 		}
 	}
+	
+	local i
+	for i=1,3 do
+		table.insert(self.buttons, {
+			x = 490 + 35 + 140*(i-1), y = 205, w =70, h = 70, text = "",
+			click = function() self:set_category(i) end
+		})
+	end
+	
+	for i=1,2 do
+		table.insert(self.buttons, {
+			x = 560 + 35 + 140*(i-1), y = 315, w =70, h = 70, text = "",
+			click = function() self:set_category(i+3) end
+		})
+	end
 end
 
 function ItemsMenu:show()
 
 	local equip_list = GameController.player.equipment
 	if self.cosmetic_mode then equip_list = GameController.player.cosmetics end
-	local item
 	
-	View.draw(self.bg_img, 0, 0, 0, 2/3)
+	View.draw(self.sprites.bg_img, 0, 0, 0, 2/3)
 	
-	GameController.player:draw_model(35,10,0.55,self.frame)
+	--/--
+	
+	GameController.player:draw_model(35,10,0.55,math.ceil(self.timer/3))
+	
+	--/--
+	
 	View.print(GameController.player.name, 20, 420, 0, 0.5)
 	View.print(GameController.player.class.name..", Level "..GameController.player.level, 20, 450, 0, 0.3)
 	View.printf(GameController.player.gold.." G", -20, 420, 1600, "right", 0, 0.3)
 	View.printf(GameController.player.diamonds.." Diamonds", -20, 450, 1600, "right", 0, 0.3)
 	
+	self:draw_btn(self.buttons[1])
 	
-	self:draw_btn(self.buttons.change_mode)
+	--/--
 	
 	View.printf(("Equip Menu"):translate(), 490, 15, 614, "center", 0, 35/50)
 	View.print(GameController.player.name, 490, 65, 0, 15/50)
 	View.print(string.format("Level %i %s", GameController.player.level, GameController.player.class.name), 490, 95, 0, 15/50)
 	View.print("XP: 0/100", 490, 125, 0, 15/50)
 	
-	View.print("Wpn:", 490, 180, 0, 15/50)
-	item = equip_list[Constants.ItemCategory.WEAPON] or Constants.NoneItem
-	View.print(item.name, 560,180,0,15/50)
+	--/--
 	
-	View.print("Hlm:", 490, 220, 0, 15/50)
-	item = equip_list[Constants.ItemCategory.HEAD] or Constants.NoneItem
-	View.print(item.name, 560,220,0,15/50)
+	local item, cat
 	
-	View.print("Arm:", 490, 260, 0, 15/50)
-	item = equip_list[Constants.ItemCategory.ARMOR] or Constants.NoneItem
-	View.print(item.name, 560,260,0,15/50)
+	View.printf("Weapon", 	490, 175, 350, "center", 0, 2/5)
+	View.printf("Helm", 	630, 175, 350, "center", 0, 2/5)
+	View.printf("Armor", 	770, 175, 350, "center", 0, 2/5)
 	
-	if self.cosmetic_mode then
-	
-	else
-		View.print("Ac1:", 490, 300, 0, 15/50)
-		View.print(equip_list[Constants.ItemCategory.ACC].name, 560,300,0,15/50)
-		
-		View.print("Ac2:", 490, 340, 0, 15/50)
-		View.print(equip_list[Constants.ItemCategory.ACC_2].name, 560,340,0,15/50)
+	for cat = 1,3 do
+		item = equip_list[cat] or Constants.NoneItem		
+		item:draw_icon(490 + 35 + 140*(cat-1),205,70)
 	end
+	
+	if not self.cosmetic_mode then
+	
+		View.printf("Accessories", 	630, 285, 350, "center", 0, 2/5)
+		
+		for cat = 4,5 do
+			item = equip_list[cat] or Constants.NoneItem
+			item:draw_icon(560 + 35 + 140*(cat-4),315,70)
+		end
+	end
+	
+	--/--
 	
 	if self.category then
 		self:show_list()
 	end
+	
+	if self.total_pages>1 then
+		View.printf("< Page "..(self.page+1).." >", 480, 680, 2000,"center", 0, 2/5)
+	end
+	
+	--/--
 	
 	if self.selected_item then
 		if self.selected_item.kind > 0 then
@@ -108,9 +145,7 @@ function ItemsMenu:show()
 		View.printf(self.selected_item.name, 920, 250, 450, "center", 0, 4/5)
 	end
 	
-	if self.total_pages>1 then
-		View.printf("< Page "..(self.page+1).." >", 480, 680, 2000,"center", 0, 2/5)
-	end
+	--/--
 	
 	View.printf("Stats", 0,  490, 800,"center", 0, 0.6)
 	
@@ -123,61 +158,10 @@ function ItemsMenu:show()
 	View.print("Speed: "..stats.speed, 20,  670, 0, 0.4)
 	View.print("Mov: "..stats.mov	, 260, 670, 0, 0.4)
 	
+	--/--
+	
 	if self.loading then
 		Utils.draw_loading(self.timer/15)
-	end
-end
-
-function ItemsMenu:handle_response(response, calling_api)
-	if calling_api.message == "equip" then
-		if self.cosmetic_mode then
-			if calling_api.item.id == Constants.NoneItem.id then
-				GameController.player.cosmetics[calling_api.category] = nil
-			else
-				GameController.player.cosmetics[calling_api.category] = calling_api.item
-			end
-		else
-			GameController.player.equipment[calling_api.category] = calling_api.item
-		end
-		
-		local cats = {"weapon", "helm","armor"}
-		if cats[self.category] then GameController.player:update_model(cats[self.category]) end
-	end
-	self.calling_api = nil
-end
-
-function ItemsMenu:sub_update(dt)
-	self.frame = math.floor(self.timer/3)%120 + 1
-	
-	self.selected_item = nil
-	self.cat_selected = nil
-	local col, lin, cat = nil, nil, nil
-	local mx, my = Utils.convert_coords(love.mouse.getPosition())
-	
-	self.equip_selected = (my < 410)
-	
-	if self.equip_selected then
-		if (mx>=490 and mx <= 920) and (my>168 and (my<288 or (my<408 and not self.cosmetic_mode))) then
-			self.cat_selected = math.ceil((my-168)/40)
-			if self.cosmetic_mode then
-				self.selected_item = GameController.player.cosmetics[self.cat_selected] or Constants.NoneItem
-			else
-				self.selected_item = GameController.player.equipment[self.cat_selected]
-			end
-		end
-	elseif self.category then
-		if (mx>=492 and (mx-492)%79<=70) then col = math.floor((mx-492)/79) + 1 end
-		if (my>=435 and my <=670 and (my-435)%80<=70) then lin = math.floor((my-435)/80) end
-		
-		cat = math.min(self.category, Constants.ItemCategory.ACC)
-		if lin and col then self.selected_item = self.item_list[cat][30*self.page + 10*lin + col] end
-		
-		if self.total_pages>1 then
-			if my > 670 then
-				self.page_change = 1
-				if mx < 880 then self.page_change = -1 end
-			end
-		end
 	end
 end
 
@@ -220,36 +204,75 @@ function ItemsMenu:show_list()
 	end
 end
 
---TODO: Alterar pra considerar que não tem dados de update
+function ItemsMenu:handle_response(response, calling_api)
+	if calling_api.message == "equip" then
+		if self.cosmetic_mode then
+			if calling_api.item.id == Constants.NoneItem.id then
+				GameController.player.cosmetics[calling_api.category] = nil
+			else
+				GameController.player.cosmetics[calling_api.category] = calling_api.item
+			end
+		else
+			GameController.player.equipment[calling_api.category] = calling_api.item
+		end
+		
+		self.selected_item = calling_api.item
+		
+		local cats = {"weapon", "helm","armor"}
+		if cats[self.category] then GameController.player:update_model(cats[self.category]) end
+	end
+	self.calling_api = nil
+end
+
+function ItemsMenu:set_category(cat)
+	self.category = cat
+	self.page = 0
+	self.total_pages = math.ceil(table.getn(self.item_list[math.min(self.category, Constants.ItemCategory.ACC)])/30)
+	
+	if self.cosmetic_mode then
+		self.selected_item = GameController.player.cosmetics[cat]
+	else
+		self.selected_item = GameController.player.equipment[cat]
+	end
+end
+
 function ItemsMenu:click(x,y,k)
 	if k == 2 then
 		MyLib.FadeToColor(0.25, {function() 
 			MainMenu:new()
 		end})
 	else
-		if (440-x)*(320-x) + (440-y)*(320-y) <= 35*35 then
-			self.cosmetic_mode = not self.cosmetic_mode
-			return
-		end
-		if self.cat_selected then
-			self.category = self.cat_selected
-			self.page = 0
-			self.total_pages = math.ceil(table.getn(self.item_list[math.min(self.category, Constants.ItemCategory.ACC)])/30)
-		
-		elseif self.selected_item then
-			if self.category >= Constants.ItemCategory.ACC then
-				local other_cat = Constants.ItemCategory.ACC_2 + Constants.ItemCategory.ACC - self.category
-				local other_acc_id = GameController.player.equipment[other_cat].id
-				if other_acc_id == self.selected_item.id then
-					return
-				end
-			end
+		if self.category then
 			
-			API.equip_item(self.selected_item, self.category, self.cosmetic_mode)
-			self.calling_api = {message="equip", category = self.category, item=self.selected_item}
+			local lin, col, cat, selected_item
+			if (x>=492 and (x-492)%79<=70) then col = math.floor((x-492)/79) + 1 end
+			if (y>=435 and y <=670 and (y-435)%80<=70) then lin = math.floor((y-435)/80) end
+			cat = math.min(self.category, Constants.ItemCategory.ACC)
+			if lin and col then selected_item = self.item_list[cat][30*self.page + 10*lin + col] end
+			
+			if selected_item then
+				if self.category >= Constants.ItemCategory.ACC then
+					local other_cat = Constants.ItemCategory.ACC_2 + Constants.ItemCategory.ACC - self.category
+					local other_acc_id = GameController.player.equipment[other_cat].id
+					if other_acc_id == selected_item.id then
+						return
+					end
+				end
+				
+				API.equip_item(selected_item, self.category, self.cosmetic_mode)
+				self.calling_api = {message="equip", category = self.category, item=selected_item}
+				return
+			end			
+		end
 		
-		elseif self.page_change then
-			self.page = math.max(0,math.min(self.page+self.page_change, self.total_pages-1))
+		if self.total_pages>1 then
+			if y > 670 then
+				local page_change = 1
+				if x < 880 then page_change = -1 end
+				
+				self.page = math.max(0,math.min(self.page+page_change, self.total_pages-1))
+			end
+			return
 		end
 	end
 end
