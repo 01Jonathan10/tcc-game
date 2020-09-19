@@ -166,3 +166,12 @@ function Utils.draw_loading(timer)
 	
 	View.setColor(1,1,1,1)
 end
+
+function Utils.shallowcopy(orig)
+    local copy, orig_value, orig_key
+    copy = {}
+    for orig_key, orig_value in pairs(orig) do
+        copy[orig_key] = orig_value
+    end
+    return copy
+end

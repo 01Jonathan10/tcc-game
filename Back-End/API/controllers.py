@@ -20,6 +20,7 @@ class PlayerController():
 		player.set_stats({
 			"hp": 100,
 			"atk": 5,
+			"matk": 5,
 			"def": 10,
 			"mdef": 15,
 			"luck": 0,

@@ -1,4 +1,5 @@
 function love.draw()
+	View.setFont(Constants.FONT)
 	local Sx, Sy = Utils.convert_coords(1, 1)
 	local scale = math.min(1/Sx, 1/Sy)
 	love.graphics.scale(scale, scale)

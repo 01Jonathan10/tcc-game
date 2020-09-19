@@ -62,6 +62,7 @@ function ItemsMenu:setup()
 	local i
 	for i=1,3 do
 		table.insert(self.buttons, {
+			-- Categories
 			x = 490 + 35 + 140*(i-1), y = 205, w =70, h = 70, text = "",
 			click = function() self:set_category(i) end
 		})
@@ -69,6 +70,7 @@ function ItemsMenu:setup()
 	
 	for i=1,2 do
 		table.insert(self.buttons, {
+			-- Categories
 			x = 560 + 35 + 140*(i-1), y = 315, w =70, h = 70, text = "",
 			click = function() self:set_category(i+3) end
 		})
@@ -96,28 +98,38 @@ function ItemsMenu:show()
 	self:draw_btn(self.buttons[1])
 	
 	--/--
-	
+
 	View.printf(("Equip Menu"):translate(), 490, 15, 614, "center", 0, 35/50)
-	View.print(GameController.player.name, 490, 65, 0, 15/50)
-	View.print(string.format("Level %i %s", GameController.player.level, GameController.player.class.name), 490, 95, 0, 15/50)
-	View.print("XP: 0/100", 490, 125, 0, 15/50)
+
+	View.setFont(Constants.FONT_DUMBLEDOR)
+
+	View.printf(GameController.player.name, 490, 70, 716, "center", 0, 30/50)
+
+	View.setFont(Constants.FONT)
+
+	View.printf(string.format("Level %i %s", GameController.player.level, GameController.player.class.name:translate()), 490, 115, 1433, "center", 0, 15/50)
+	View.print("XP:", 490, 140, 0, 18/50)
 	
 	--/--
 	
 	local item, cat
-	
+
+	View.setColor(0,0,0)	
 	View.printf("Weapon", 	490, 175, 350, "center", 0, 2/5)
 	View.printf("Helm", 	630, 175, 350, "center", 0, 2/5)
 	View.printf("Armor", 	770, 175, 350, "center", 0, 2/5)
-	
+	View.setColor(1,1,1)
+
 	for cat = 1,3 do
 		item = equip_list[cat] or Constants.NoneItem		
 		item:draw_icon(490 + 35 + 140*(cat-1),205,70)
 	end
 	
 	if not self.cosmetic_mode then
-	
+		
+		View.setColor(0,0,0)
 		View.printf("Accessories", 	630, 285, 350, "center", 0, 2/5)
+		View.setColor(1,1,1)
 		
 		for cat = 4,5 do
 			item = equip_list[cat] or Constants.NoneItem
@@ -142,21 +154,43 @@ function ItemsMenu:show()
 			View.draw(Item.icons[self.selected_item.kind], 925, 0, 0, 0.7)
 		end
 		
-		View.printf(self.selected_item.name, 920, 250, 450, "center", 0, 4/5)
+		View.setFont(Constants.FONT_DUMBLEDOR)
+		View.printf(self.selected_item.name, 920, 250, 600, "center", 0, 3/5)
+		View.setFont(Constants.FONT)
+
+		local stat, value, color, sign
+		local verbose = {hp="Max HP",mov="Mov",atk="Atk",def="Def",matk="M Atk",mdef="M Def",speed="Speed",luck="Luck"}
+		local index = 0
+
+		for stat, value in pairs(self.selected_item.stats) do
+			if value > 0 then
+				color = {0,1,0}
+				sign = '+' 
+			else 
+				color = {1,0,0}
+				sign = '' 
+			end
+			View.print({color, verbose[stat]..": "..sign..value}, 930 + 170*(index%2), 340+50*math.floor(index/2), 0, 2/5)
+			index = index + 1
+		end
 	end
 	
 	--/--
 	
 	View.printf("Stats", 0,  490, 800,"center", 0, 0.6)
 	
-	local stats = GameController.player.stats
+	local stats = GameController.player:get_stats()
+	
+	View.setColor(0,0,0)
 	View.print("Max HP: "..stats.hp	, 20,  550, 0, 0.4)
+	View.print("Mov: "..stats.mov	, 260, 550, 0, 0.4)
 	View.print("Atk: "..stats.atk	, 20,  590, 0, 0.4)
 	View.print("Def: "..stats.def	, 260, 590, 0, 0.4)
-	View.print("M Def: "..stats.mdef, 20,  630, 0, 0.4)
-	View.print("Luck: "..stats.luck	, 260, 630, 0, 0.4)
-	View.print("Speed: "..stats.speed, 20,  670, 0, 0.4)
-	View.print("Mov: "..stats.mov	, 260, 670, 0, 0.4)
+	View.print("M Atk: "..stats.matk, 20,  630, 0, 0.4)
+	View.print("M Def: "..stats.mdef, 260, 630, 0, 0.4)
+	View.print("Speed: "..stats.speed, 20, 670, 0, 0.4)
+	View.print("Luck: "..stats.luck	, 260, 670, 0, 0.4)
+	View.setColor(1,1,1)
 	
 	--/--
 	

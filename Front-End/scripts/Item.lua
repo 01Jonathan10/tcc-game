@@ -46,12 +46,12 @@ function Item:load_single_icon(cat)
 	if cat == Constants.ItemCategory.WEAPON then
 		View.draw(img, 0, 0)
 	elseif cat == Constants.ItemCategory.ARMOR then
-		View.draw(img, View.newQuad(500, 0, 500, 500, 1500, 1100),0, 0)
-		View.draw(img, View.newQuad(0, 0, 500, 500, 1500, 1100),0, 0)
-		View.draw(img, View.newQuad(1000, 0, 500, 500, 1500, 1100),0, 0)
+		View.draw(img, View.newQuad(500, 0, 500, 500, 1500, 1100),15, 0)
+		View.draw(img, View.newQuad(0, 0, 500, 500, 1500, 1100),15, 0)
+		View.draw(img, View.newQuad(1000, 0, 500, 500, 1500, 1100),15, 0)
 	elseif cat == Constants.ItemCategory.HEAD then
 		for i = 1,0,-1 do
-			View.draw(img, View.newQuad(i*500, 0, 500, 500, 1000, 500),0, 0)
+			View.draw(img, View.newQuad(i*500, 0, 500, 500, 1000, 500),5, 0)
 		end
 	elseif cat >= Constants.ItemCategory.ACC then
 		View.draw(img, 0, 0)
@@ -65,4 +65,4 @@ function Item:load_single_icon(cat)
 	return Item.icons[self.kind]
 end
 
-Constants.NoneItem = Item:new({id=-1, kind=0, name="No Item"})
+Constants.NoneItem = Item:new({id=-1, kind=0, name="No Item", stats={}})

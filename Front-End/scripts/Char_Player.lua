@@ -46,6 +46,19 @@ function Player:get_cosmetic(cat)
 	return self.cosmetics[cat] or self.equipment[cat]
 end
 
+function Player:get_stats(cat)
+	local calculated_stats = Utils.shallowcopy(self.stats)
+	local stat, value, equip
+
+	for _, equip in ipairs(self.equipment) do
+		for stat, value in pairs(equip.stats) do
+			calculated_stats[stat] = calculated_stats[stat] + value
+		end
+	end
+
+	return calculated_stats
+end
+
 function Player:load_model()
 	if self.model_data then return end
 		

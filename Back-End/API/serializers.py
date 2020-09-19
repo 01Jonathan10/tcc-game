@@ -65,6 +65,7 @@ class ItemInstanceSerializer(serializers.Serializer):
 	type = serializers.SerializerMethodField()
 	wpn_type = serializers.SerializerMethodField()
 	name = serializers.SerializerMethodField()
+	stats = serializers.SerializerMethodField()
 	extra_slot = serializers.BooleanField()
 	
 	def get_item_id(self, obj):
@@ -78,6 +79,9 @@ class ItemInstanceSerializer(serializers.Serializer):
 		
 	def get_name(self, obj):
 		return obj.item.name
+
+	def get_stats(self, obj):
+		return obj.item.get_stats()
 
 
 class QuestSerializer(serializers.ModelSerializer):
