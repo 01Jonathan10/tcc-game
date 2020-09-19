@@ -105,4 +105,9 @@ Constants.EnumAnimation = {
 	ATTACK = 1,
 }
 
+Constants.FONT_8BIT = love.graphics.newFont("assets/fonts/8-bit-limit/8bitlim.ttf", 80, "light")
+Constants.FONT_FRIVOLITY = love.graphics.newFont("assets/fonts/aka-frivolity/akaFrivolity.ttf", 80, "light")
+Constants.FONT_ROTH = love.graphics.newFont("assets/fonts/rothenburg-decorative/Rothenburg Decorative.ttf", 80, "light")
+Constants.FONT_ENDOR = love.graphics.newFont("assets/fonts/endor/ENDORALT.ttf", 80, "light")
+Constants.FONT_LUCID = love.graphics.newFont("assets/fonts/lucid-type/lucid.ttf", 80, "light")
 Constants.FONT = love.graphics.newFont(50)

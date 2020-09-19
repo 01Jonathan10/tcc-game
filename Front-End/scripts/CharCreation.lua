@@ -275,8 +275,8 @@ function CharCreation:mousepressed(x,y,k)
 	local picker
 
 	if self.picker and x > self.picker.x-100 and x < (self.picker.x + 100) and y > self.picker.y-100 and y < (self.picker.y + 100) then
-		local picker_file = 'assets/Menus/ColorPicker.png'
-		if self.picker.trait == Constants.EnumTrait.SKIN then picker_file = 'assets/Menus/SkinColorPicker.png' end
+		local picker_file = 'assets/menus/ColorPicker.png'
+		if self.picker.trait == Constants.EnumTrait.SKIN then picker_file = 'assets/menus/SkinColorPicker.png' end
 		
 		local color = {love.image.newImageData(picker_file):getPixel(x - self.picker.x + 100, y - self.picker.y + 100)}
 		self.new_char.trait_colors[self.picker.trait] = color

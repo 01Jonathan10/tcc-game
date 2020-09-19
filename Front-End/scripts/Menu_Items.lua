@@ -7,7 +7,7 @@ function ItemsMenu:setup()
 	self.sprites = {
 		bg_img = love.graphics.newImage("assets/menus/MenuItems.png")
 	}
-		
+
 	API.get_player_items()
 	
 	self.item_list = {{},{},{},{}}
