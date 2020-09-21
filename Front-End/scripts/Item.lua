@@ -34,6 +34,7 @@ function Item.load_icons(list)
 end
 
 function Item:load_single_icon(cat)
+	if self.kind <= 0 or Item.icons[self.kind] then return end
 	local canvas = View.newCanvas(500,500)
 	local img = love.graphics.newImage(string.format('assets/equips/%i/img.png', self.kind))
 	local i

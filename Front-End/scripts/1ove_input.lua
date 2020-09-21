@@ -27,7 +27,7 @@ function love.keypressed(key)
 	end
 
 	if GameController.state == Constants.EnumGameState.LOGIN and key == "return" then
-		API.login_player(GameController.login_screen.login_box.text, GameController.login_screen.pass_box.text)
+		GameController.login_screen:login()
 	end
 	
 	if key == "\'" and GameController.state == Constants.EnumGameState.MENU then

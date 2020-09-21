@@ -1,22 +1,14 @@
 function API.login_player(login, pass)
-	local data = {username=login, password=pass}
-	data = Utils.table_to_json(data)
+	local data = Utils.table_to_json({username=login, password=pass})
 	API.get_token(data)
 end
 
+function API.get_token(data)	
+	API.channel:push({message = "post", url="/api/get-token/", body=data})
+end
+
 function API.get_player()
-	local response
 	API.channel:push({message = "get", url="/api/player/get"})
-	
-	GameController.waiting_api = function(response)
-		if response.status == Constants.STATUS_OK then
-			local player_data = Json.decode(response[1])
-			GameController.player = Player:new(API.translate_player(player_data))
-		else
-			API.error()
-			GameController.player = Character:new({})
-		end
-	end
 end
 
 function API.create_player(player)
@@ -41,7 +33,6 @@ function API.create_player(player)
 	local player_data = Json.encode(data)
 	
 	API.channel:push({message = "post", url="/api/player/create/", body=player_data})
-	GameController.task_queue = GameController.task_queue + 1
 end
 
 function API.translate_player(player_data)

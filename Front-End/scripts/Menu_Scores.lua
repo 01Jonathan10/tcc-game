@@ -5,8 +5,15 @@ function ScoresMenu:setup()
 	self.submenu = Constants.EnumSubmenu.SCORES
 	self.scores = {unclaimed={}, claimed={}}
 	
+	self.loading = true
 	API.load_scores()
-	self.calling_api = true
+	Promise:new():success(function(response) 
+		self.scores = response
+		self:refresh_buttons()
+	end):after(function() 
+		MyLib.skip_frame = true
+		self.loading = nil
+	end)
 end
 
 function ScoresMenu:refresh_buttons()
@@ -61,22 +68,17 @@ function ScoresMenu:draw_score(score,x,y)
 	View.setColor(1,1,1)
 end
 
-
-function ScoresMenu:handle_response(response, calling_api)
-	if self.refresh then
-		API.load_scores()
-		self.refresh = nil
-	else
-		self.scores = response
-		self:refresh_buttons()
-		self.calling_api = nil
-	end
-end
-
 function ScoresMenu:claim_score(score)
 	API.claim_score(score)
-	self.calling_api = true
-	self.refresh = true
+	Promise:new():after(function(response) 
+		API.load_scores()
+		Promise:new():success(function(response) 
+			self.scores = response
+			self:refresh_buttons()
+		end):after(function() 
+			self.loading = nil
+		end)
+	end)
 end
 
 function ScoresMenu:click(x,y,k)

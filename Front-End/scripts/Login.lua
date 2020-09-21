@@ -33,41 +33,13 @@ function Login:draw()
 		View.setColor(1,1,1)
 	end
 	
-	if GameController.task_queue>0 then
+	if self.loading then
 		Utils.draw_loading(self.timer*4)
 	end
 end
 
 function Login:update(dt)
 	self.timer = (self.timer + dt)
-	if GameController.task_queue>0 then
-		local message = API.r_channel:pop()
-		if message then
-			self.player_logged = message
-			GameController.task_queue = GameController.task_queue - 1
-		end
-		return
-	end
-	
-	if self.player_logged then		
-		if self.player_logged.status == Constants.STATUS_OK then
-			local player_data = Json.decode(self.player_logged[1])
-			local player = {}
-			
-			API.channel:push({message="set_token", token=player_data.token})
-						
-			if player_data.player.nochar then 
-				player = {nochar = true}
-			end
-			
-			MyLib.FadeToColor(0.25, {function() GameController.login(player) end})
-		else
-			self.invalid = true
-			self.disabled = false
-		end
-		
-		self.player_logged = nil
-	end
 end
 
 function Login:mousepressed(x,y,k)
@@ -75,6 +47,27 @@ function Login:mousepressed(x,y,k)
 		self.invalid = nil
 		self.disabled = true
 		self.timer = 0
-		API.login_player(self.login_box.text, self.pass_box.text)
+		self:login()
 	end
+end
+
+function Login:login()
+	API.login_player(self.login_box.text, self.pass_box.text)
+	self.loading=true
+	Promise:new():success(function(data)
+		local player = {}
+		
+		API.channel:push({message="set_token", token=data.token})
+					
+		if data.player.nochar then
+			player = {nochar = true}
+		end
+		
+		GameController.login(player)
+	end):fail(function()
+		self.invalid = true
+		self.disabled = false
+	end):after(function()
+		self.loading = nil
+	end)
 end

@@ -13,7 +13,7 @@ function MainMenu:setup()
 	
 	self.bg_img = love.graphics.newImage("assets/Main.png")
 	
-	self:request_update(lock)
+	self:request_update()
 end
 
 function MainMenu:show()
@@ -58,19 +58,6 @@ function MainMenu:update(dt)
 		self:request_update()
 	end
 	
-	if self.updating then
-		local response = API.r_channel:pop()
-		
-		if response then
-			if response.status == Constants.STATUS_OK then
-				local response_data = Json.decode(response[1])
-				GameController.player.energy = response_data.energy
-			end
-			self.calling_api = nil
-			self.updating = nil
-		end
-	end
-	
 	self.frame = math.floor(self.timer)%120 + 1
 end
 
@@ -93,8 +80,9 @@ function MainMenu:click(x,y,k)
 	end
 end
 
-function MainMenu:request_update(lock)
-	self.calling_api = lock or nil
-	self.updating = true
+function MainMenu:request_update()
 	API.update_player()
+	Promise:new():success(function(data) 
+		GameController.player.energy = data.energy or GameController.player.energy
+	end)
 end

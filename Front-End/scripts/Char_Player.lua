@@ -28,7 +28,7 @@ function Player:new(obj)
 	new.equipment = obj.equipment or {}
 	new.cosmetics = obj.cosmetics or {}
 	new.skills = obj.skills or {}
-	
+		
 	new.id = obj.id
 	
 	return new
@@ -345,7 +345,7 @@ function Player:load_mini_sprite()
 	
 	self:unload_model()
 	
-	local canvas_blurred = View.newCanvas(1400,1200)
+	local canvas_blurred = View.newCanvas(1400,960)
 	View.setCanvas(canvas_blurred)
 	View.setShader(shader)
 	View.draw(canvas,0,0,0,0.2)

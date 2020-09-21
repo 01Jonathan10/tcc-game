@@ -4,7 +4,7 @@ function love.draw()
 	local scale = math.min(1/Sx, 1/Sy)
 	love.graphics.scale(scale, scale)
 	
-	if GameController.waiting_api then
+	if GameController.loading then
 		Utils.draw_loading(GameController.timer*math.pi)
 		return
 	end

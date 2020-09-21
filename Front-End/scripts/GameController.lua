@@ -8,30 +8,50 @@ function GameController.begin_game()
 end
 
 function GameController.login(player)
-	Textbox:dispose()
-
 	if player.nochar then
-		GameController.state = Constants.EnumGameState.CREATION
-		GameController.char_creation = CharCreation:new()
+		MyLib.FadeToColor(0.25, {function()  
+			GameController.state = Constants.EnumGameState.CREATION
+			GameController.login_screen = nil
+			GameController.char_creation = CharCreation:new()
+		end})
 	else
 		GameController.go_to_menu()
 	end
 end
 
 function GameController.go_to_menu()
-	GameController.login_screen = nil
-	
-	GameController.player = API.get_player()
-	
-	local tmp = GameController.waiting_api
-	GameController.waiting_api = function(response)
-		tmp(response)
-		Textbox:dispose()
-		GameController.state = Constants.EnumGameState.MENU
-		MyLib.FadeClass.create(0.25, {}, {}, "fill", {0,0,0,1}, false)
-		MyLib.skip_frame = true
-		GameController.menu = MainMenu:new()
-	end
+	API.get_player()
+	Promise:new():success(function(data)
+		MyLib.FadeToColor(0.25, {function()
+			GameController.login_screen = nil
+			GameController.state = Constants.EnumGameState.MENU
+			Textbox:dispose()
+			GameController.player = Player:new(API.translate_player(data))
+			GameController.menu = MainMenu:new()
+		end})
+	end):fail(function() 
+		API.error()
+		GameController.player = Character:new({})
+	end)
+end
+
+function GameController.go_to_menu()
+	API.get_player()
+	GameController.loading = true
+	Promise:new():success(function(data)
+		MyLib.FadeToColor(0.25, {function()
+			GameController.login_screen = nil
+			GameController.state = Constants.EnumGameState.MENU
+			Textbox:dispose()
+			GameController.player = Player:new(API.translate_player(data))
+			GameController.menu = MainMenu:new()
+		end})
+	end):fail(function() 
+		API.error()
+		GameController.player = Character:new({})
+	end):after(function()
+		GameController.loading = nil
+	end)
 end
 
 function GameController.start_quest(quest, diff, actions)

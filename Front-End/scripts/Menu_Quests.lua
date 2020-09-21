@@ -10,10 +10,19 @@ function QuestsMenu:setup()
 	self.diff_select = nil
 	self.quest_list = {}
 	self.total_quests = #self.quest_list
-	self.calling_api = true
-	self.on_setup = true
+	
+	self.loading = true
 	
 	API.get_quests()
+	Promise:new():success(function(response)
+		local each
+		for _, each in ipairs(response) do				
+			table.insert(self.quest_list, Quest:new(each))
+		end
+		self.total_quests = #self.quest_list
+	end):after(function()
+		self.loading = nil
+	end)
 	
 	View.setLineWidth(3)
 end
@@ -38,25 +47,6 @@ function QuestsMenu:show()
 		View.print(quest.name, 30, 160+40*(index-1),0,15/50)
 	end
 	
-end
-
-function QuestsMenu:handle_response(response, calling_api)
-	self.calling_api = nil
-	
-	if self.on_setup then
-		local each
-		for _, each in ipairs(response) do				
-			table.insert(self.quest_list, Quest:new(each))
-		end
-		self.on_setup = nil
-		self.total_quests = #self.quest_list
-	else
-		self.disabled = true
-		MyLib.FadeToColor(0.25, {function()
-			GameController.player:unload_model()
-			GameController.start_quest(response.quest, response.diff, response.actions)
-		end})
-	end
 end
 
 function QuestsMenu:sub_update(dt)
@@ -100,8 +90,19 @@ function QuestsMenu:click(x,y,k)
 			self.diff_select = self.mouseover_diff
 		end
 		if self.mouseover_go then
-			self.calling_api = true
+			self.disabled = true
+			self.loading = true
+			
 			API.enter_quest(self.selection, self.diff_select)
+			Promise:new():success(function(response) 
+				MyLib.FadeToColor(0.25, {function()
+					GameController.player:unload_model()
+					GameController.start_quest(response.quest, response.diff, response.actions)
+				end})
+			end):fail(function() 
+				self.disabled = nil
+				self.loading = nil
+			end)
 		end
 	end
 end

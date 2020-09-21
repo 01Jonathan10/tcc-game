@@ -7,30 +7,15 @@ function ItemsMenu:setup()
 	self.sprites = {
 		bg_img = love.graphics.newImage("assets/menus/MenuItems.png")
 	}
+	
+	local cat, item
+	for cat, item in ipairs(GameController.player.equipment) do item:load_single_icon(cat) end
+	for cat, item in ipairs(GameController.player.cosmetics) do item:load_single_icon(cat) end
 
-	API.get_player_items()
+	self:request_item_list()
 	
 	self.item_list = {{},{},{},{}}
-	self.loading = true
 	self.cosmetic_mode = false
-	
-	local tmp = GameController.waiting_api
-	GameController.waiting_api = function(response)
-		tmp(response)
-		self.item_list = GameController.tmp
-		GameController.tmp = nil	
-		self.loading = nil
-		
-		Item.load_icons(self.item_list)
-		
-		MyLib.skip_frame = true
-		
-		for cat, list in ipairs(self.item_list) do
-			if cat ~= Constants.ItemCategory.ARMOR and cat ~= Constants.ItemCategory.WEAPON then
-				table.insert(list, 1, Constants.NoneItem)
-			end
-		end
-	end
 	
 	self.selected_item = nil
 	self.category = nil
@@ -75,6 +60,54 @@ function ItemsMenu:setup()
 			click = function() self:set_category(i+3) end
 		})
 	end
+end
+
+function ItemsMenu:request_item_list()
+	API.get_player_items()
+	self.loading = true
+	Promise:new():success(function(data)
+		self.item_list = {{},{},{},{}}
+		for _, each in ipairs(data) do
+			cat = each.type
+			each.kind = each.item_id
+			each.item_id = nil
+			table.insert(self.item_list[cat], Item:new(each))
+		end
+				
+		self.loading = nil
+		
+		Item.load_icons(self.item_list)
+		
+		MyLib.skip_frame = true
+		
+		for cat, list in ipairs(self.item_list) do
+			if cat ~= Constants.ItemCategory.ARMOR and cat ~= Constants.ItemCategory.WEAPON then
+				table.insert(list, 1, Constants.NoneItem)
+			end
+		end
+	end)
+end
+
+function ItemsMenu:request_equip(item, cat, cosmetic_mode)
+	API.equip_item(item, cat, cosmetic_mode)
+	self.loading = true
+	Promise:new():success(function(data)
+		if cosmetic_mode then
+			if item.id == Constants.NoneItem.id then
+				GameController.player.cosmetics[cat] = nil
+			else
+				GameController.player.cosmetics[cat] = item
+			end
+		else
+			GameController.player.equipment[cat] = item
+		end
+		
+		self.selected_item = item
+		self.loading = nil
+		
+		local cats = {"weapon", "helm","armor"}
+		if cats[cat] then GameController.player:update_model(cats[cat]) end
+	end)
 end
 
 function ItemsMenu:show()
@@ -191,12 +224,6 @@ function ItemsMenu:show()
 	View.print("Speed: "..stats.speed, 20, 670, 0, 0.4)
 	View.print("Luck: "..stats.luck	, 260, 670, 0, 0.4)
 	View.setColor(1,1,1)
-	
-	--/--
-	
-	if self.loading then
-		Utils.draw_loading(self.timer/15)
-	end
 end
 
 function ItemsMenu:show_list()
@@ -238,26 +265,6 @@ function ItemsMenu:show_list()
 	end
 end
 
-function ItemsMenu:handle_response(response, calling_api)
-	if calling_api.message == "equip" then
-		if self.cosmetic_mode then
-			if calling_api.item.id == Constants.NoneItem.id then
-				GameController.player.cosmetics[calling_api.category] = nil
-			else
-				GameController.player.cosmetics[calling_api.category] = calling_api.item
-			end
-		else
-			GameController.player.equipment[calling_api.category] = calling_api.item
-		end
-		
-		self.selected_item = calling_api.item
-		
-		local cats = {"weapon", "helm","armor"}
-		if cats[self.category] then GameController.player:update_model(cats[self.category]) end
-	end
-	self.calling_api = nil
-end
-
 function ItemsMenu:set_category(cat)
 	self.category = cat
 	self.page = 0
@@ -293,8 +300,7 @@ function ItemsMenu:click(x,y,k)
 					end
 				end
 				
-				API.equip_item(selected_item, self.category, self.cosmetic_mode)
-				self.calling_api = {message="equip", category = self.category, item=selected_item}
+				self:request_equip(selected_item, self.category, self.cosmetic_mode)
 				return
 			end			
 		end

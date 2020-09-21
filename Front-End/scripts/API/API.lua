@@ -8,6 +8,8 @@ local ltn12 = require("ltn12")
 function API.run_thread()
 	API.thread = love.thread.newThread("scripts/API/API_Server.lua")
 	API.thread:start()
+	
+	API.promise = nil
 end
 
 function API.post_request(url, data)
@@ -49,12 +51,6 @@ function API.get_request(url)
 	}
 	
 	return response
-end
-
-function API.get_token(data)	
-	API.channel:push({message = "post", url="/api/get-token/", body=data})
-	GameController.task_queue = GameController.task_queue + 1
-	return nil
 end
 
 function API.error()

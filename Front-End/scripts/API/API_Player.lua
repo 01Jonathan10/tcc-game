@@ -1,30 +1,9 @@
 function API.get_player_items()
-	local response
 	API.channel:push({message = "get", url="/api/player/items"})
-	
-	GameController.waiting_api = function(response)
-		local items = {{},{},{},{}}
-		
-		if response.status == Constants.STATUS_OK then
-			local item_data = Json.decode(response[1])
-			items = {{},{},{},{}}
-			for _, each in ipairs(item_data) do
-				cat = each.type
-				each.kind = each.item_id
-				each.item_id = nil
-				table.insert(items[cat], Item:new(each))
-			end
-		else
-			API.error()
-		end
-		
-		GameController.tmp = items
-	end
 end
 
 function API.equip_item(item, category, cosmetic)	
-	local cosmetic = cosmetic or false
-	local data = {id=item.id, slot=(category==Constants.ItemCategory.ACC_2), cat=category, cosmetic=cosmetic}
+	local data = {id=item.id, slot=(category==Constants.ItemCategory.ACC_2), cat=category, cosmetic=cosmetic or false}
 	API.channel:push({message = "post", url="/api/player/equip/", body=Json.encode(data)})
 end
 

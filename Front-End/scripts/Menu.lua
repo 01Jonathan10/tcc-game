@@ -24,7 +24,7 @@ function Menu:draw()
 		View.rectangle("fill", 0,0,60,60)
 	end
 	
-	if self.calling_api then
+	if self.calling_api or self.loading then
 		Utils.draw_loading(self.timer/15)
 	end
 end

@@ -4,14 +4,13 @@ function love.update(dt)
 	
 	GameController.timer = (GameController.timer + dt) %1
 	
-	if GameController.waiting_api then
+	if API.promise then
 		local response = API.r_channel:pop()
 		if response then
-			local tmp = GameController.waiting_api
-			GameController.waiting_api = nil
-			tmp(response)
+			local prom = API.promise
+			API.promise = nil
+			prom:handle(response)
 		end
-		return
 	end
 
 	if GameController.state == Constants.EnumGameState.MENU then

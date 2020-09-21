@@ -226,34 +226,6 @@ function CharCreation:update(dt)
 	self.timer = (self.timer + 60*dt)%360
 	self.frame = math.floor(self.timer/3)%120 + 1
 	
-	if GameController.task_queue>0 then
-		local message = API.r_channel:pop()
-		if message then
-			self.response = message
-			GameController.task_queue = GameController.task_queue - 1
-		end
-		return
-	end
-	
-	if self.response then
-		if self.response.status == Constants.STATUS_OK then
-			local response = Json.decode(self.response[1])
-			if response.status == "ok" then
-				local p = self.new_char
-				MyLib.FadeToColor(0.25, {function()
-					GameController.player = Player:new(p)
-					GameController.go_to_menu()
-				end})
-				self.response = nil
-				self.loading = false
-				return
-			end			
-		end
-		self.loading = false
-		self.disabled = false
-		self.response = nil
-	end
-	
 	local i, class
 	local mx, my = Utils.convert_coords(love.mouse.getPosition())
 	
@@ -342,8 +314,16 @@ function CharCreation:mousepressed(x,y,k)
 	end
 	
 	if x >= 520 and x <= 760 and y >= 630 and y <= 690 then
-		API.create_player(self.new_char)
 		self.disabled = true
 		self.loading = true
+		local new_char = self.new_char
+		API.create_player(new_char)
+		Promise:new():success(function(response) 
+			GameController.go_to_menu()
+		end):fail(function() 
+			self.disabled = false
+		end):after(function()
+			self.loading = false
+		end)
 	end	
 end

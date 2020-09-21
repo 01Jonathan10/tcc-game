@@ -41,6 +41,5 @@ GameController.debug = is_debug
 is_debug = nil
 
 API.run_thread()
-GameController.task_queue = 0
 GameController.timer = 0
 GameController.begin_game()

@@ -4,8 +4,6 @@ ShopMenu.__index = ShopMenu
 function ShopMenu:setup()
 	self.submenu = Constants.EnumSubmenu.SHOP
 	
-	API.get_shop_items()
-	self.calling_api = true
 	self.item_list = self:organize_and_load({})
 	
 	self.curr_cat = Constants.ItemCategory.WEAPON
@@ -18,7 +16,14 @@ function ShopMenu:setup()
 		click = function() self:buy_item() end
 	}}
 	
-	MyLib.skip_frame = true
+	self.loading = true
+	API.get_shop_items()
+	Promise:new():success(function(response) 
+		self.item_list = self:organize_and_load(response)
+	end):after(function() 
+		MyLib.skip_frame = true
+		self.loading = nil
+	end)
 end
 
 function ShopMenu:show()
@@ -80,22 +85,10 @@ function ShopMenu:show()
 	end
 end
 
-function ShopMenu:handle_response(response, calling_api)
-	if self.action then
-		GameController.player.gold = GameController.player.gold - self.selection.price
-		self.calling_api = nil
-		self.selection.bought = true
-		self.selection = nil
-	else
-		self.item_list = self:organize_and_load(response)
-		self.calling_api = nil
-		MyLib.skip_frame = true
-	end
-end
-
 function ShopMenu:organize_and_load(items)
-	local new_list = {{},{},{},{}}
+	local new_list = {{},{},{},{}}	
 	local new_item = nil
+	local item
 	
 	for _, item in ipairs(items) do
 		new_item = Item:new(item)
@@ -139,8 +132,17 @@ end
 
 function ShopMenu:buy_item()
 	API.buy_item(self.selection)
-	self.calling_api = true
-	self.action = "buy"
+	self.loading = true
+	self.buttons[1].disabled = true
+	
+	Promise:new():success(function()
+		GameController.player.gold = GameController.player.gold - self.selection.price
+		self.selection.bought = true
+		self.selection = nil
+	end):after(function()
+		self.loading = nil
+		self.buttons[1].disabled = false
+	end)	
 end
 
 function ShopMenu:close_func()
