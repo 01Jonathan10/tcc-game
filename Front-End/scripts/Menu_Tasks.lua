@@ -4,8 +4,6 @@ TasksMenu.__index = TasksMenu
 function TasksMenu:setup()
 	self.submenu = Constants.EnumSubmenu.TASKS
 	
-	API.load_tasks()
-	self.calling_api = true
 	self.task_list = {player={}, all={}}
 	
 	self.buttons = {
@@ -18,6 +16,14 @@ function TasksMenu:setup()
 			click = function() self:register_task() end, disabled = true
 		}
 	}
+
+	self.loading=true
+	API.load_tasks()
+	Promise:new():success(function(response) 
+		self.task_list = response
+	end):after(function()
+		self.loading = false
+	end)
 end
 
 function TasksMenu:new_task()
@@ -38,9 +44,20 @@ end
 
 function TasksMenu:register_task()
 	API.create_task(self.creating_task)
-	self.calling_api = true
-	self.refresh_after = true
+	self:reload_promise()
 	self:close_popup()
+end
+
+function TasksMenu:reload_promise()
+	self.loading = true
+	Promise:new():after(function(response)
+		API.load_tasks()
+		Promise:new():success(function(response) 
+			self.task_list = response
+		end):after(function()
+			self.loading = false
+		end)
+	end)
 end
 
 function TasksMenu:show()
@@ -126,16 +143,6 @@ function TasksMenu:create_popup()
 	self:draw_btn(self.buttons[2])
 end
 
-function TasksMenu:handle_response(response, calling_api)
-	if self.refresh_after then
-		API.load_tasks()
-		self.refresh_after = nil
-	else	
-		self.task_list = response
-		self.calling_api = nil
-	end
-end
-
 function TasksMenu:sub_update(dt)
 	if self.timer >= 60 then 
 		self.timer = self.timer - 60
@@ -173,8 +180,7 @@ function TasksMenu:click(x,y,k)
 				if not task.finished then
 					if y>= 60+100*idx and y<= 100 + 100*idx then
 						API.finish_task(task)
-						self.calling_api = true
-						self.refresh_after = true
+						self:reload_promise()
 						return
 					end
 				else
@@ -193,8 +199,7 @@ function TasksMenu:click(x,y,k)
 						return
 					elseif y_delta + (1125-x)*(1125-x) <= 625 then
 						API.review_task(task, false)
-						self.calling_api = true
-						self.refresh_after = true
+						self:reload_promise()
 						return
 					end
 				end

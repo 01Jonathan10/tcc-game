@@ -16,9 +16,14 @@ function SkillMenu:setup()
 	
 	for i=0,2 do table.insert(self.class_quads, View.newQuad(i*100, 0, 100, 100, 300, 100)) end
 		
-	self.calling_api = true
-	self.on_setup = true
+	self.loading=true
 	API.get_player_skills()
+	Promise:new():success(function(response) 
+		self.skill_list = response
+		Skill.loaded_skills = Skill:translate_response(response)
+	end):after(function()
+		self.loading = false
+	end)
 end
 
 function SkillMenu:show()
@@ -155,22 +160,6 @@ function SkillMenu:get_skill_range()
 		end
 		
 		table.insert(self.skill_range, {pos.x, pos.y})
-	end
-end
-
-function SkillMenu:sub_update(dt)
-	
-end
-
-function SkillMenu:handle_response(response, calling_api)
-	if not self.on_setup then
-		
-	else
-		self.skill_list = response
-		Skill.loaded_skills = Skill:translate_response(response)
-		self.calling_api = nil
-		MyLib.skip_frame = true
-		self.on_setup = nil
 	end
 end
 

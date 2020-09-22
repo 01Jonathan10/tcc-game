@@ -21,7 +21,6 @@ function ShopMenu:setup()
 	Promise:new():success(function(response) 
 		self.item_list = self:organize_and_load(response)
 	end):after(function() 
-		MyLib.skip_frame = true
 		self.loading = nil
 	end)
 end

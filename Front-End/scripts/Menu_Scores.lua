@@ -11,7 +11,6 @@ function ScoresMenu:setup()
 		self.scores = response
 		self:refresh_buttons()
 	end):after(function() 
-		MyLib.skip_frame = true
 		self.loading = nil
 	end)
 end

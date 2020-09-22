@@ -8,7 +8,6 @@ local ltn12 = require("ltn12")
 function API.run_thread()
 	API.thread = love.thread.newThread("scripts/API/API_Server.lua")
 	API.thread:start()
-	
 	API.promise = nil
 end
 
