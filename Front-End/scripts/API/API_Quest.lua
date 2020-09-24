@@ -6,3 +6,7 @@ end
 function API.execute_quest_actions(actions)
 	API.channel:push({message = "post", url="/api/quest/actions/", body=Json.encode(actions)})
 end
+
+function API.update_map_actions()
+	API.channel:push({message = "get", url="/api/quest/actions/"})
+end

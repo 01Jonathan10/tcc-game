@@ -17,6 +17,8 @@ from . import models
 from . import serializers
 from . import controllers
 
+from .quest_controller import QuestController
+
 from .constants import Constants
 
 class BaseView(APIView):
@@ -154,7 +156,7 @@ class EnterQuest(BaseView):
 	def post(self, request):
 		quest = models.Quest.objects.get(pk=request.data.get('id'))
 		
-		q_i = controllers.QuestController.enter_quest(quest, request.data.get('difficulty'), request.user.player)
+		q_i = QuestController.enter_quest(quest, request.data.get('difficulty'), request.user.player)
 		if q_i is not None:
 			return Response({
 				"quest": serializers.QuestMapSerializer(q_i).data, 
@@ -169,8 +171,20 @@ class QuestActions(BaseView):
 		if not q_i.exists():
 			return HttpResponseForbidden()
 			
-		board_state = controllers.QuestController.execute_actions(request.data, q_i.get())
+		board_state = QuestController.execute_actions(request.data, q_i.get())
 				
+		if board_state:
+			return Response(board_state)
+		
+		return HttpResponseForbidden()
+		
+	def get(self, request):
+		q_i = models.QuestInstance.objects.filter(players=request.user.player, active=True)
+		if not q_i.exists():
+			return HttpResponseForbidden()
+			
+		board_state = QuestController(q_i.get()).board_state
+						
 		if board_state:
 			return Response(board_state)
 		
@@ -290,3 +304,4 @@ class BuyShopItem(BaseView):
 		models.ItemInstance.objects.create(item=item, owner=player)
 		
 		return Response({})
+

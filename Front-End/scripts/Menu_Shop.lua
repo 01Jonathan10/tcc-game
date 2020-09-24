@@ -26,14 +26,6 @@ function ShopMenu:setup()
 end
 
 function ShopMenu:show()
-
-	View.printf(("Shop"):translate(), 480, 15, 1143, "center", 0, 35/50)
-
-	View.line(480,0,480,720)
-	View.line(0,480,480,480)
-	View.line(480,520,1280,520)
-	View.line(480,70, 1280, 70)
-	View.line(480,120, 1280, 120)
 	
 	local frame = math.floor(self.timer/3)%120 + 1
 	local player = GameController.player
@@ -43,6 +35,8 @@ function ShopMenu:show()
 	View.print(player.class.name..", Level "..player.level, 20, 450, 0, 0.3)
 	View.printf(player.gold.." G", -20, 420, 1600, "right", 0, 0.3)
 	View.printf(player.diamonds.." Diamonds", -20, 450, 1600, "right", 0, 0.3)
+	
+	View.printf(("Shop"):translate(), 480, 15, 1143, "center", 0, 35/50)
 	
 	local idx, item, cat
 	local categories = {"Weapons", "Helms", "Armors", "Accessories"}

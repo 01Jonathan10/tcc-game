@@ -8,6 +8,7 @@ function Map:new(quest)
 	
 	map.mouse_over = nil
 	map.timer = 0
+	map.poll_timer = 0
 	map.frame = 1
 	
 	map.request_queue = {}
@@ -17,9 +18,17 @@ function Map:new(quest)
 	
 	map:set_camera_player()
 	
+	self.loading = true
 	API.get_skills(quest.id)
-	map.calling_api = true
-	map.waiting_skills = true
+	Promise:new():success(function(response_data)
+		Skill.loaded_skills = Skill:translate_response(response_data)						
+		local idx, id
+		for idx, skill in ipairs(GameController.player.skills) do
+			GameController.player.skills[idx] = Skill:get(skill.id)
+		end	
+	end):after(function() 
+		self.loading = nil
+	end)
 	
 	return map
 end
@@ -86,6 +95,7 @@ function Map.load_map(quest)
 	map:set_camera_focus_to_char(turn_owner)
 	
 	map.actions = quest.map_data.available_actions
+	map.action_count = quest.map_data.curr_action
 		
 	return map
 end
@@ -120,7 +130,7 @@ function Map:draw()
 	View.setColor(1,1,1)
 	View.pop()
 	
-	if self.calling_api then
+	if self.loading then
 		Utils.draw_loading(self.timer/10)
 	end
 end
@@ -290,36 +300,12 @@ end
 function Map:update(dt)
 	self.timer = (self.timer + 40*dt)%120
 	self.frame = math.floor(self.timer) + 1
-		
-	if self.calling_api then
-		local response = API.r_channel:pop()
-		
-		if response then
-			if response.status == Constants.STATUS_OK then
-				local response_data = (Json.decode(response[1]))
-				if self.waiting_skills then
-					Skill.loaded_skills = Skill:translate_response(response_data)
-										
-					local idx, id
-					for idx, skill in ipairs(GameController.player.skills) do
-						GameController.player.skills[idx] = Skill:get(skill.id)
-					end				
-				else
-					local new_action
-					self.action_queue = self.action_queue or {}
-									
-					for _, new_action in ipairs(response_data.actions) do
-						table.insert(self.action_queue, new_action)
-					end
-					
-					if not self.curr_action.type then self:resolve() end
-				end
-			end
-			self.waiting_skills = nil
-			self.calling_api = nil
-		end
-		
-		return
+	
+	self.poll_timer = self.poll_timer + dt
+	if self.poll_timer >= 5 then
+		API.update_map_actions()
+		self:update_promise()
+		self.poll_timer = 0
 	end
 	
 	if self.curr_action.type == "animation" then
@@ -409,7 +395,7 @@ end
 function Map:click(x, y, k)
 	local cell = nil
 	
-	if self.calling_api then return end
+	if self.loading then return end
 	if self.curr_action.type then 
 		if self.curr_action.type == "message" then
 			if self.curr_action.after then
@@ -547,27 +533,44 @@ function Map:attack(skill_id, att_char, direction)
 end
 
 function Map:pass_turn()
-
 	table.insert(self.request_queue, {
 		action = "pass",
 		player_id = self.turn_order[self.turn].id,
 	})
 		
 	self:make_request()
-
 end
 
 function Map:make_request()
 	API.execute_quest_actions(self.request_queue)
+	self.loading = true
 	self.request_queue = {}
-	self.calling_api = true
+	self:update_promise()
+end
+
+function Map:update_promise()
+	Promise:new():success(function(response_data) 
+		local new_action, idx
+		self.action_queue = self.action_queue or {}
+						
+		for idx = self.action_count+1,#response_data.actions do
+			new_action = response_data.actions[idx]
+			table.insert(self.action_queue, new_action)
+		end
+		
+		if not self.curr_action.type then self:resolve() end
+	end):after(function() 
+		self.loading = nil
+	end)
 end
 
 function Map:resolve()
 	local action = self.action_queue[1]	
 	if not action then return end
 	table.remove(self.action_queue, 1)
-		
+	
+	self.action_count = self.action_count + 1
+	
 	if action.action == "pass" then
 		self.phase = Constants.EnumPhase.IDLE
 		self.turn = (self.turn%table.getn(self.turn_order)) + 1

@@ -194,8 +194,7 @@ function TasksMenu:click(x,y,k)
 				if not task.reviewed then
 					if y_delta + (1025-x)*(1025-x) <= 625 then
 						API.review_task(task, true)
-						self.calling_api = true
-						self.refresh_after = true
+						self:reload_promise()
 						return
 					elseif y_delta + (1125-x)*(1125-x) <= 625 then
 						API.review_task(task, false)

@@ -24,7 +24,7 @@ function Menu:draw()
 		View.rectangle("fill", 0,0,60,60)
 	end
 	
-	if self.calling_api or self.loading then
+	if self.loading then
 		Utils.draw_loading(self.timer/15)
 	end
 end
@@ -49,25 +49,11 @@ end
 
 function Menu:update(dt)
 	self.timer = (self.timer + 60*dt)%360
-	
-	if self.calling_api then
-		local response = API.r_channel:pop()
-		
-		if response then
-			if response.status == Constants.STATUS_OK then
-				self:handle_response(Json.decode(response[1]), self.calling_api)
-			else
-				API.error()
-				self.calling_api = nil
-			end
-		end
-	end
-	
 	self:sub_update(dt)
 end
 
 function Menu:mousepressed(x,y,k) 
-	if self.calling_api or self.disabled then return end
+	if self.loading or self.disabled then return end
 		
 	if (x<=60 and y<=60) and self.back_btn then
 		MyLib.FadeToColor(0.25, {function() 
@@ -105,4 +91,3 @@ function Menu:sub_update(dt) end
 function Menu:textinput(text) end
 function Menu:keypressed(key) end
 function Menu:close_func() end
-function Menu:handle_response(response, calling_api) end

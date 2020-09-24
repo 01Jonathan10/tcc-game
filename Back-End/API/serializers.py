@@ -4,7 +4,7 @@ from django.conf import settings
 import json, os, datetime
 
 from .models import Player, Quest, QuestInstance, Skill, TaskInstance, Task, TaskReview, Score, Item
-from .controllers import QuestController
+from .quest_controller import QuestController
 
 
 class SkillIdSerializer(serializers.ModelSerializer):

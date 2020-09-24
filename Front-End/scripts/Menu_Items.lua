@@ -210,11 +210,12 @@ function ItemsMenu:show()
 	
 	--/--
 	
+	View.setColor(0,0,0)
+	
 	View.printf("Stats", 0,  490, 800,"center", 0, 0.6)
 	
 	local stats = GameController.player:get_stats()
 	
-	View.setColor(0,0,0)
 	View.print("Max HP: "..stats.hp	, 20,  550, 0, 0.4)
 	View.print("Mov: "..stats.mov	, 260, 550, 0, 0.4)
 	View.print("Atk: "..stats.atk	, 20,  590, 0, 0.4)

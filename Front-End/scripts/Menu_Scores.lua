@@ -10,7 +10,7 @@ function ScoresMenu:setup()
 	Promise:new():success(function(response) 
 		self.scores = response
 		self:refresh_buttons()
-	end):after(function() 
+	end):after(function()
 		self.loading = nil
 	end)
 end
