@@ -69,7 +69,9 @@ class QuestController():
 	@staticmethod
 	def starting_board(q_i, filename):
 		board = {}
-		map_data_path = os.path.join(settings.STATIC_ROOT,"data/maps/{}.json".format(q_i.quest.id))
+		
+		map_data_path = os.path.join(settings.STATIC_ROOT,"data","maps","{}.json".format(q_i.quest.id))		
+
 		with open(map_data_path) as file:
 			map_data = json.load(file)
 		
@@ -113,6 +115,10 @@ class QuestController():
 		
 		board['z_map'] = map_data['z_map']
 		board['block_map'] = map_data['block_map']
+
+		map_data_dir = os.path.join(settings.STATIC_ROOT,"data","q_i_info")
+		if not os.path.isdir(map_data_dir):
+			os.mkdir(map_data_dir) 
 				
 		with open(filename, 'w') as file:
 			json.dump(board, file)
