@@ -137,4 +137,4 @@ dmypy.json
 *.sai
 
 #Static
-Back-End/static/
+Back-End/static/data/q_i_info/*.json
