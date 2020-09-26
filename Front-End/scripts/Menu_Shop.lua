@@ -16,6 +16,11 @@ function ShopMenu:setup()
 		click = function() self:buy_item() end
 	}}
 	
+	self.sprites = {
+		bg_img = love.graphics.newImage("assets/menus/MenuShop.png"),
+		tab = love.graphics.newImage("assets/menus/ShopTab.png"),
+	}
+	
 	self.loading = true
 	API.get_shop_items()
 	Promise:new():success(function(response) 
@@ -29,6 +34,11 @@ function ShopMenu:show()
 	
 	local frame = math.floor(self.timer/3)%120 + 1
 	local player = GameController.player
+	
+	View.draw(self.sprites.bg_img, 0, 0, 0, 2/3)
+	
+	--/--
+	
 	player:draw_model(35,0,0.55,frame)
 	
 	View.print(player.name, 20, 420, 0, 0.5)
@@ -36,16 +46,20 @@ function ShopMenu:show()
 	View.printf(player.gold.." G", -20, 420, 1600, "right", 0, 0.3)
 	View.printf(player.diamonds.." Diamonds", -20, 450, 1600, "right", 0, 0.3)
 	
+	--/--
+	
 	View.printf(("Shop"):translate(), 480, 15, 1143, "center", 0, 35/50)
 	
 	local idx, item, cat
 	local categories = {"Weapons", "Helms", "Armors", "Accessories"}
 	
+	View.draw(self.sprites.tab, 497 + 200*(self.curr_cat-1), 79, 0, 2/3)
+	
 	for idx, cat in ipairs(categories) do
-		View.setColor(1,1,1)
-		if self.curr_cat == idx then View.setColor(0,0.8,0.2) end
-		View.printf(cat, 480 + 200*(idx-1), 85, 500, "center", 0, 2/5)
+		View.printf(cat, 480 + 200*(idx-1), 89, 500, "center", 0, 2/5)
 	end
+	
+	--/--
 
 	for idx, item in ipairs(self.item_list[self.curr_cat]) do
 		View.setColor(1,1,1)

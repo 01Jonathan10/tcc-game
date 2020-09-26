@@ -32,7 +32,7 @@ function love.keypressed(key)
 	
 	if key == "\'" and GameController.state == Constants.EnumGameState.MENU then
 		print('reload')
-		local reloading = 'Menu_Tasks'
+		local reloading = 'Menu_Shop'
 		
 		local menu = GameController.menu
 		package.loaded[reloading] = nil
