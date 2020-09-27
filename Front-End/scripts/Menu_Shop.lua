@@ -62,15 +62,18 @@ function ShopMenu:show()
 	--/--
 
 	for idx, item in ipairs(self.item_list[self.curr_cat]) do
-		View.setColor(1,1,1)
-		if item.bought then
-			View.setColor(0.3,0.3,0.3)
-		end
 		x = 490 + 100*((idx-1)%8)
 		y = 130 + 100*math.floor((idx-1)/8)
-		item:draw_icon(x,y,80)
+		if item.bought then
+			item:draw_icon(x,y,80, 0.3)
+		else
+			item:draw_icon(x,y,80)
+		end
 	end
-	View.setColor(1,1,1)
+	
+	--/--
+	
+	View.setColor(0,0,0)
 	
 	View.printf("Stats", 0,  490, 800,"center", 0, 0.6)
 	
@@ -82,6 +85,10 @@ function ShopMenu:show()
 	View.print("Luck: "..stats.luck	, 260, 630, 0, 0.4)
 	View.print("Speed: "..stats.speed, 20,  670, 0, 0.4)
 	View.print("Mov: "..stats.mov	, 260, 670, 0, 0.4)
+	
+	View.setColor(1,1,1)
+	
+	--/--
 	
 	if self.selection then
 		local item = self.selection
@@ -138,6 +145,7 @@ function ShopMenu:click(x,y,k)
 end
 
 function ShopMenu:buy_item()
+	if not self.selection then return end
 	API.buy_item(self.selection)
 	self.loading = true
 	self.buttons[1].disabled = true

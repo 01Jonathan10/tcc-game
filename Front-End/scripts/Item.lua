@@ -13,16 +13,18 @@ function Item:new(obj)
 	return obj
 end
 
-function Item:draw_icon(x,y, size)
+function Item:draw_icon(x,y, size, alpha)
+	local alpha = alpha or 1
 	if self == Constants.NoneItem then
-		View.setColor(1,1,1)
+		View.setColor(1,1,1, alpha)
 		View.draw(Item.border_img, x, y, 0, size/100)
 	else
-		View.setColor(1,0,0)
+		View.setColor(1,0,0, alpha)
 		View.draw(Item.border_img, x, y, 0, size/100)
-		View.setColor(1,1,1)
+		View.setColor(1,1,1, alpha)
 		View.draw(Item.icons[self.kind], x, y, 0, size/500)
 	end
+	View.setColor(1,1,1)
 end
 
 function Item.load_icons(list)

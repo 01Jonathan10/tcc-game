@@ -56,7 +56,7 @@ function SkillMenu:show()
 	for idx = 1,4 do
 		x = 400 + (idx-1)*160
 		y = 635 - 40*(idx%2)
-		if GameController.player.skills[idx] and not self.on_setup then
+		if GameController.player.skills[idx] and not self.loading then
 			skill = Skill:get(GameController.player.skills[idx].id)
 			View.setColor(1,1,1)
 			View.printf(skill.name, x-80, y-10, 400, "center", 0, 0.4)
