@@ -1,7 +1,7 @@
 import json, datetime
 
 from django.views import View
-from django.db.models import Exists, OuterRef, Q
+from django.db.models import Exists, OuterRef, Q, F
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
@@ -193,7 +193,7 @@ class QuestActions(BaseView):
 
 class TaskList(BaseView):
 	def get(self, request):		
-		player_tasks = models.TaskInstance.objects.filter(task__owner=request.user.player, disabled=False).order_by("finished", "deadline")
+		player_tasks = models.TaskInstance.objects.filter(task__owner=request.user.player, disabled=False).order_by(F("finished").desc(nulls_first=True))
 		other_tasks = models.TaskInstance.objects.filter(finished__isnull=False, disabled=False).exclude(task__owner=request.user.player)
 		
 		other_tasks = other_tasks.annotate(reviewed = Exists(models.TaskReview.objects.filter(task__pk=OuterRef('pk'), reviewer=request.user.player)))

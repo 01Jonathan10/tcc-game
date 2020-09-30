@@ -14,6 +14,8 @@ function Menu:new(obj)
 	
 	GameController.menu = obj
 	
+	MyLib.skip_frame = true
+	
 	return obj
 end
 
@@ -83,6 +85,15 @@ function Menu:mousepressed(x,y,k)
 	end
 	
 	self:click(x,y,k)
+end
+
+function Menu:is_down(btn)
+	return love.mouse.isDown(btn)
+end
+
+function Menu:get_mouse_position()
+	local x,y = love.mouse.getPosition()
+	return Utils.convert_coords(x,y)
 end
 
 function Menu:setup() end

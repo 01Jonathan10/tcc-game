@@ -48,7 +48,7 @@ function ShopMenu:show()
 	
 	--/--
 	
-	View.printf(("Shop"):translate(), 480, 15, 1143, "center", 0, 35/50)
+	View.printf(("Shop"):translate(), 480, 10, 1143, "center", 0, 35/50)
 	
 	local idx, item, cat
 	local categories = {"Weapons", "Helms", "Armors", "Accessories"}

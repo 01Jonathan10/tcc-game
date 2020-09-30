@@ -132,7 +132,7 @@ function ItemsMenu:show()
 	
 	--/--
 
-	View.printf(("Equip Menu"):translate(), 490, 15, 614, "center", 0, 35/50)
+	View.printf(("Equipment"):translate(), 490, 10, 614, "center", 0, 35/50)
 
 	View.setFont(Constants.FONT_DUMBLEDOR)
 
