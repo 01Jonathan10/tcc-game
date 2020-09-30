@@ -8,6 +8,8 @@ function ShopMenu:setup()
 	
 	self.curr_cat = Constants.ItemCategory.WEAPON
 	self.curr_item = nil
+
+	self.tab_height = {1,0,0,0}
 	
 	GameController.player:load_model()
 	
@@ -52,10 +54,9 @@ function ShopMenu:show()
 	
 	local idx, item, cat
 	local categories = {"Weapons", "Helms", "Armors", "Accessories"}
-	
-	View.draw(self.sprites.tab, 497 + 200*(self.curr_cat-1), 79, 0, 2/3)
-	
+
 	for idx, cat in ipairs(categories) do
+		View.draw(self.sprites.tab, 497 + 200*(idx-1), 79 + 59*(1-self.tab_height[idx])*2/3, 0, 2/3, self.tab_height[idx]*2/3)
 		View.printf(cat, 480 + 200*(idx-1), 89, 500, "center", 0, 2/5)
 	end
 	
@@ -158,6 +159,18 @@ function ShopMenu:buy_item()
 		self.loading = nil
 		self.buttons[1].disabled = false
 	end)	
+end
+
+function ShopMenu:sub_update(dt)
+	local cat
+	for cat = 1,4 do
+		if self.curr_cat == cat and self.tab_height[cat] < 1 then
+			self.tab_height[cat] = math.min(1, self.tab_height[cat] + (2-self.tab_height[cat])*5*dt)
+		end
+		if self.curr_cat ~= cat and self.tab_height[cat] > 0 then
+			self.tab_height[cat] = math.max(0, self.tab_height[cat] - (1+self.tab_height[cat])*5*dt)
+		end
+	end
 end
 
 function ShopMenu:close_func()

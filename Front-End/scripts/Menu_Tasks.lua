@@ -14,6 +14,14 @@ function TasksMenu:setup()
 		{
 			x = 600, y = 540, w = 80, h = 35, text = {{0,0,0,1}, ("Add Task"):translate()},
 			click = function() self:register_task() end, disabled = true
+		},
+		{
+			x = 195, y = 39, w = 250, h = 59, text = "",
+			click = function() self.list_toggle = false end
+		},
+		{
+			x = 835, y = 39, w = 250, h = 59, text = "",
+			click = function() self.list_toggle = true end
 		}
 	}
 	
@@ -28,6 +36,9 @@ function TasksMenu:setup()
 	self.list_toggle = false
 	self.scroll = {0,0,0,0}
 	self.scroll_size = {1,1,1,1}
+
+	self.player_task_buttons = {}
+	self.other_task_buttons = {}
 	
 	API.load_tasks()
 	Promise:new():success(function(response) 
@@ -59,9 +70,7 @@ function TasksMenu:register_buttons()
 	local idxs = {0,0,0,0}	
 	local idx, x, y
 	
-	for _ = self.btn_begin, #self.buttons do
-		table.remove(self.buttons, self.btn_begin)
-	end
+	self.player_task_buttons = {}
 	
 	for _, task in ipairs(self.task_list.player) do	
 		idxs[task.type] = idxs[task.type] + 1
@@ -69,11 +78,11 @@ function TasksMenu:register_buttons()
 		x = 15 + 320 * (task.type-1)
 		y = 65 + 100*idx
 	
-		table.insert(self.buttons, {
+		table.insert(self.player_task_buttons, {
 			x = x+200, y = y+55, r = 20, text = "", form = "circle", disabled = task.finished,
 			click = function() self:finish_task(task) end
 		})
-		table.insert(self.buttons, {
+		table.insert(self.player_task_buttons, {
 			x = x+245, y = y+15, r = 10, text = "", form = "circle",
 			click = function() 
 			if not self.viewing_details then self.viewing_details = task end end
@@ -91,8 +100,8 @@ function TasksMenu:move_buttons()
 		
 		delta_y = self.scroll[task.type]*500*((1/self.scroll_size[task.type])-1)
 	
-		self.buttons[self.btn_begin + 2*(idx-1)].y = 120 + 100*btn_idx - delta_y
-		self.buttons[self.btn_begin + 2*(idx-1) + 1].y = 80 + 100*btn_idx - delta_y
+		self.player_task_buttons[2*(idx-1) + 1].y = 120 + 100*btn_idx - delta_y
+		self.player_task_buttons[2*(idx-1) + 2].y = 80 + 100*btn_idx - delta_y
 	end
 end
 
@@ -194,7 +203,7 @@ function TasksMenu:show()
 	else
 		
 		for idx, task in ipairs(self.task_list.player) do
-			btn_idx = self.btn_begin+2*(idx-1)
+			btn_idx = 2*(idx-1) + 1
 			idxs[task.type] = idxs[task.type] + 1
 			idx = idxs[task.type]
 			x = 15 + 320 * (task.type-1)
@@ -219,9 +228,9 @@ function TasksMenu:show()
 				View.print(task.approvals, x+20, y+60, 0, 1/5)
 				View.print(task.reports, x+70, y+60, 0, 1/5)
 			else
-				self:draw_btn(self.buttons[btn_idx])
+				self:draw_btn(self.player_task_buttons[btn_idx])
 			end
-			self:draw_btn(self.buttons[btn_idx + 1])
+			self:draw_btn(self.player_task_buttons[btn_idx + 1])
 		end
 		
 		local scroll_idx
@@ -338,9 +347,8 @@ function TasksMenu:mousepressed(x,y,k)
 			end
 		end
 		
-		if y >= 165 and y <= 665 then
-			for idx = self.btn_begin, #self.buttons do
-				btn = self.buttons[idx]
+		if y >= 165 and y <= 665 and not self.list_toggle then
+			for _, btn in ipairs(self.player_task_buttons) do
 				if not btn.disabled then
 					if btn.form == "circle" then
 						if (btn.x-x)*(btn.x-x) + (btn.y-y)*(btn.y-y) <= btn.r*btn.r and not btn.disabled then
@@ -380,7 +388,7 @@ function TasksMenu:click(x,y,k)
 			return
 		end
 		
-		if x%320 > 290 and x%320 < 310 and y > 165 and y < 665 then
+		if x%320 > 290 and x%320 < 310 and y > 165 and y < 665 and not self.list_toggle then
 			local scroll = math.ceil(x/320)
 			if self.scroll_size[scroll] < 1 then
 				self.scrolling = scroll
