@@ -200,7 +200,7 @@ class TaskList(BaseView):
 		
 		response = {
 			"player": serializers.TaskInstanceSerializer(player_tasks, many=True).data, 
-			"all": serializers.TaskInstanceSerializer(other_tasks, many=True).data
+			"all": serializers.TaskInstanceSerializer(other_tasks, many=True, context={"player": request.user.player}).data
 		}
 		
 		return Response(response)
@@ -257,11 +257,22 @@ class ReviewTask(BaseView):
 class ScoreList(BaseView):		
 	def get(self, request):
 		player_scores = models.Score.objects.filter(owner=request.user.player, active=True)
-
-		response = {
-			"unclaimed": serializers.ScoreSerializer(player_scores.filter(claimed=False), many=True).data,
-			"claimed": serializers.ScoreSerializer(player_scores.filter(claimed=True), many=True).data
-		}
+		
+		semesters = models.Semester.objects.filter(score__in=player_scores).all().distinct()
+		
+		print(semesters)
+		
+		response = []
+		
+		for semester in semesters:
+			data = {"name": semester.name, "subjects": []}
+			scores = player_scores.filter(semester=semester).order_by('subject__name')
+			
+			for score in scores:
+				if len(data.get("subjects")) == 0 or data.get("subjects")[-1].get("pk") != score.subject.pk:
+					data["subjects"].append({"name": score.subject.name, "scores": [], "pk": score.subject.pk})
+				data["subjects"][-1]["scores"].append(serializers.ScoreSerializer(score).data)
+			response.append(data)
 		
 		return Response(response)
 

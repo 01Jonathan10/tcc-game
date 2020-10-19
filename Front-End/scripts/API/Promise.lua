@@ -9,7 +9,16 @@ function Promise:new()
 		after_callback = function () end
 	}
 	setmetatable(obj, Promise)
-	API.promise = obj
+	
+	if API.promise then
+		local tmp = API.promise.after_callback
+		API.promise:after(function() 
+			tmp()
+			API.promise = obj
+		end)
+	else
+		API.promise = obj
+	end
 	return obj
 end
 

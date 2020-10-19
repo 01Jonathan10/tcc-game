@@ -19,6 +19,8 @@ function love.draw()
 		GameController.char_creation:draw()
 	end
 	
+	View.setColor(1,1,1)
+	
 	if Textbox.list then
 		Textbox.draw_all()
 	end

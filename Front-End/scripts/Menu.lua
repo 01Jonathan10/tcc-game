@@ -7,6 +7,8 @@ function Menu:new(obj)
 	obj.back_btn = true
 	obj.buttons = {}
 	
+	obj.div_img = love.graphics.newImage("assets/menus/Div.png")
+	
 	self.timer = 0
 	
 	setmetatable(obj, self)
@@ -22,6 +24,7 @@ end
 function Menu:draw()
 	self:show()
 	
+	View.setColor(1,1,1)
 	if self.back_btn then
 		View.rectangle("fill", 0,0,60,60)
 	end
@@ -40,13 +43,14 @@ end
 function Menu:draw_btn(btn)
 	if btn.form == "circle" then
 		local size = btn.r/175
-		View.circle("fill", btn.x, btn.y, btn.r)
+		self:draw_btn_circle(btn.x, btn.y, btn.r)
 		View.printf(btn.text, btn.x - btn.r, btn.y - btn.r/7, 2*btn.r/size, "center", 0, size)
 	else
 		local size = math.min(btn.w, btn.h)/150
-		View.rectangle("fill", btn.x, btn.y, btn.w, btn.h)
+		self:draw_btn_panel(btn.x, btn.y, btn.w, btn.h)
 		View.printf(btn.text, btn.x, btn.y + btn.h/3, btn.w/size, "center", 0, size)
 	end
+	View.setColor(1,1,1)
 end
 
 function Menu:update(dt)
@@ -94,6 +98,30 @@ end
 function Menu:get_mouse_position()
 	local x,y = love.mouse.getPosition()
 	return Utils.convert_coords(x,y)
+end
+
+function Menu:draw_panel(x,y,w,h)
+	View.setColor(0, 0, 0, 0.6)
+	View.rectangle("fill", x+3, y+5, w, h, 5, 5, 10)
+	View.setColor(0.92, 0.92, 0.83)
+	View.rectangle("fill", x, y, w, h, 5, 5, 10)
+	View.setColor(1,1,1)
+end
+
+function Menu:draw_btn_panel(x,y,w,h)
+	View.setColor(0, 0, 0, 0.6)
+	View.rectangle("fill", x+2, y+2, w, h, 2, 2)
+	View.setColor(1,1,1)
+	View.rectangle("fill", x, y, w, h, 2, 2)
+	View.setColor(0,0,0)
+end
+
+function Menu:draw_btn_circle(x,y,r)
+	View.setColor(0, 0, 0, 0.6)
+	View.circle("fill", x+2, y+2, r)
+	View.setColor(1,1,1)
+	View.circle("fill", x, y, r)
+	View.setColor(0,0,0)
 end
 
 function Menu:setup() end

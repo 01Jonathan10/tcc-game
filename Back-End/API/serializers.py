@@ -124,7 +124,8 @@ class TaskInstanceSerializer(serializers.Serializer):
 	approvals = serializers.SerializerMethodField()
 	reports = serializers.SerializerMethodField()
 	time_left = serializers.SerializerMethodField()
-	reviewed = serializers.BooleanField(required=False)
+	reviewed = serializers.SerializerMethodField()
+	owner = serializers.SerializerMethodField()
 	
 	def get_name(self, obj):
 		return obj.task.name
@@ -146,12 +147,20 @@ class TaskInstanceSerializer(serializers.Serializer):
 			return 0
 			
 		return int((obj.deadline - datetime.datetime.now()).total_seconds())
+		
+	def get_owner(self, obj):
+		return obj.task.owner.name
+		
+	def get_reviewed(self, obj):
+		if self.context.get('player'):
+			return TaskReview.objects.filter(task=obj, reviewer=self.context.get('player')).exists()
+		return None
 
 
 class ScoreSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Score
-		fields = ['name', 'score', 'max', 'pk']
+		fields = ['name', 'score', 'max', 'pk', 'claimed']
 
 
 class ItemSerializer(serializers.ModelSerializer):

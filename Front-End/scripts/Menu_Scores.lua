@@ -3,13 +3,18 @@ ScoresMenu.__index = ScoresMenu
 
 function ScoresMenu:setup()
 	self.submenu = Constants.EnumSubmenu.SCORES
-	self.scores = {unclaimed={}, claimed={}}
+	self.score_tree = {}
+	self.branches = {}
 	
 	self.loading = true
 	API.load_scores()
 	Promise:new():success(function(response) 
-		self.scores = response
-		self:refresh_buttons()
+		self.score_tree = response
+		self.branches = {}
+		for _, _ in ipairs(self.score_tree) do
+			table.insert(self.branches, nil)
+		end
+		-- self:refresh_buttons()
 	end):after(function()
 		self.loading = nil
 	end)
@@ -19,7 +24,7 @@ function ScoresMenu:refresh_buttons()
 	self.buttons = {}
 	
 	local idx, score, x, y
-	for idx, score in ipairs(self.scores.unclaimed) do
+	for idx, score in ipairs(self.score_tree.unclaimed) do
 		y = math.ceil(idx/2)*80 + 70
 		
 		table.insert(self.buttons, {
@@ -32,26 +37,16 @@ end
 function ScoresMenu:show()
 	View.printf(("Scores"):translate(), 0, 15, 1829, "center", 0, 35/50)
 	
-	View.printf(("Unclaimed"):translate(), 0, 85, 1280, "center", 0, 1/2)
-	View.printf(("Claimed"):translate(), 640, 85, 1280, "center", 0, 1/2)
-	
 	View.line(0, 70, 1280, 70)
 	View.line(640, 70, 640, 720)
 	
 	local idx, score, x, y
 	
-	for idx, score in ipairs(self.scores.unclaimed) do
+	for idx, semester in ipairs(self.score_tree) do
 		y = math.ceil(idx/2)*80 + 60
 		x = 20
 				
-		self:draw_score(score,x,y)
-	end
-	
-	for idx, score in ipairs(self.scores.claimed) do
-		y = math.ceil(idx/2)*80 + 60
-		x = 660
-		
-		self:draw_score(score,x,y)
+		View.print(semester.name, x, y, 0, 0.5)
 	end
 	
 	self:draw_buttons()
@@ -72,7 +67,7 @@ function ScoresMenu:claim_score(score)
 	Promise:new():after(function(response) 
 		API.load_scores()
 		Promise:new():success(function(response) 
-			self.scores = response
+			self.score_tree = response
 			self:refresh_buttons()
 		end):after(function() 
 			self.loading = nil

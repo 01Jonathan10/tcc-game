@@ -182,7 +182,25 @@ function ItemsMenu:show()
 	
 	--/--
 	
+	self:draw_panel(930,330,340,80)
+	
 	if self.selected_item then
+		local stat, value, color, sign
+		local verbose = {hp="Max HP",mov="Mov",atk="Atk",def="Def",matk="M Atk",mdef="M Def",speed="Speed",luck="Luck"}
+		local index = 0
+
+		for stat, value in pairs(self.selected_item.stats) do
+			if value > 0 then
+				color = {0,0.5,0}
+				sign = '+' 
+			else 
+				color = {0.5,0,0}
+				sign = '' 
+			end
+			View.print({color, verbose[stat]..": "..sign..value}, 940 + 160*(index%2), 340+50*math.floor(index/2), 0, 2/5)
+			index = index + 1
+		end
+		
 		if self.selected_item.kind > 0 then
 			View.draw(Item.icons[self.selected_item.kind], 925, 0, 0, 0.7)
 		end
@@ -190,22 +208,6 @@ function ItemsMenu:show()
 		View.setFont(Constants.FONT_DUMBLEDOR)
 		View.printf(self.selected_item.name, 920, 250, 600, "center", 0, 3/5)
 		View.setFont(Constants.FONT)
-
-		local stat, value, color, sign
-		local verbose = {hp="Max HP",mov="Mov",atk="Atk",def="Def",matk="M Atk",mdef="M Def",speed="Speed",luck="Luck"}
-		local index = 0
-
-		for stat, value in pairs(self.selected_item.stats) do
-			if value > 0 then
-				color = {0,1,0}
-				sign = '+' 
-			else 
-				color = {1,0,0}
-				sign = '' 
-			end
-			View.print({color, verbose[stat]..": "..sign..value}, 930 + 170*(index%2), 340+50*math.floor(index/2), 0, 2/5)
-			index = index + 1
-		end
 	end
 	
 	--/--
