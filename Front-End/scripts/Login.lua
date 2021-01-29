@@ -32,6 +32,12 @@ function Login:draw()
 		View.printf(("Invalid username or password."):translate(), 240, 540, 2000, "center", 0, 2/5)
 		View.setColor(1,1,1)
 	end
+
+	if self.message then
+		View.setColor(1,0.2,0.2)
+		View.printf(self.message:translate(), 240, 540, 2000, "center", 0, 2/5)
+		View.setColor(1,1,1)
+	end
 	
 	if self.loading then
 		Utils.draw_loading(self.timer*4)
@@ -54,6 +60,8 @@ end
 function Login:login()
 	API.login_player(self.login_box.text, self.pass_box.text)
 	self.loading=true
+	self.invalid = false
+	self.message = nil
 	Promise:new():success(function(data)
 		local player = {}
 		
@@ -64,8 +72,12 @@ function Login:login()
 		end
 		
 		GameController.login(player)
-	end):fail(function()
-		self.invalid = true
+	end):fail(function(data)
+		if data.status == 403 then
+			self.invalid = true
+		else
+			self.message = data.status
+		end
 		self.disabled = false
 	end):after(function()
 		self.loading = nil

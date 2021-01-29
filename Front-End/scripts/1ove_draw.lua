@@ -24,6 +24,12 @@ function love.draw()
 	if Textbox.list then
 		Textbox.draw_all()
 	end
+
+	if #GameController.alert_stack > 0 then
+		for _, alert in ipairs(GameController.alert_stack) do
+			alert:draw()
+		end
+	end
 	
 	if GameController.debug then love.graphics.print('Memory actually used (in kB): ' .. collectgarbage('count'), 10,10, 0, 0.4) end
 end

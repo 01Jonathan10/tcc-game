@@ -5,7 +5,7 @@ function Promise:new()
 	obj = {
 		active = true,
 		success_callback = function(data) end,
-		error_callback = function(data) API.error() end,
+		error_callback = function(data) API.error(data) end,
 		after_callback = function () end
 	}
 	setmetatable(obj, Promise)
