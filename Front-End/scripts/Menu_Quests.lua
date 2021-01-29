@@ -99,9 +99,10 @@ function QuestsMenu:click(x,y,k)
 					GameController.player:unload_model()
 					GameController.start_quest(response.quest, response.diff, response.actions)
 				end})
-			end):fail(function() 
+			end):fail(function(data)
 				self.disabled = nil
 				self.loading = nil
+				API.error(data)
 			end)
 		end
 	end

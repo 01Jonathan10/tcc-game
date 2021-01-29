@@ -76,7 +76,7 @@ function Login:login()
 		if data.status == 403 then
 			self.invalid = true
 		else
-			self.message = data.status
+			self.message = data[1]
 		end
 		self.disabled = false
 	end):after(function()

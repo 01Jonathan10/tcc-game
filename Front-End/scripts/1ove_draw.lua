@@ -29,7 +29,11 @@ function love.draw()
 		for _, alert in ipairs(GameController.alert_stack) do
 			alert:draw()
 		end
+		View.setColor(1,1,1)
 	end
 	
-	if GameController.debug then love.graphics.print('Memory actually used (in kB): ' .. collectgarbage('count'), 10,10, 0, 0.4) end
+	if GameController.debug then
+		love.graphics.print('Memory actually used (in kB): ' .. collectgarbage('count'), 80,10, 0, 0.4)
+		love.graphics.print(GameController.debug_msg or "", 80,30, 0, 0.4)
+	end
 end

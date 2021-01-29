@@ -40,8 +40,10 @@ end
 function Promise:handle(response)
 	if response.status == Constants.STATUS_OK then
 		self.success_callback(Json.decode(response[1]))
+	elseif response.status == "connection refused" then
+		self.error_callback({status=0, [1]=("Server not found"):translate()})
 	else
-		self.error_callback({status=response.status})
+		self.error_callback(response)
 	end
 	
 	self.after_callback()

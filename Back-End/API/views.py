@@ -166,7 +166,12 @@ class EnterQuest(BaseView):
                 "quest": serializers.QuestMapSerializer(q_i).data,
                 "diff": request.data.get('difficulty')
             })
-        return HttpResponseForbidden()
+
+        current = models.QuestInstance.objects.filter(players=self.request.user.player, active=True).first()
+        message = "Can't enter quest! You're still in quest"
+        return HttpResponseForbidden(
+            f"{message} {current.quest.name} - "
+            f"{models.QuestInstance.DIFFICULTY_CHOICES[current.difficulty-1][1]}")
 
 
 class QuestActions(BaseView):
