@@ -6,25 +6,31 @@ fps = 60
 love.filesystem.setRequirePath('scripts/MyLib/?.lua')
 require ('MyLib')
 
-love.filesystem.setRequirePath('scripts/API/?.lua')
+function import_directory(path, exclude)
+	local exclude = exclude or {}
+	local skipped = nil
+	love.filesystem.setRequirePath( path..'/?.lua' )
+	local scripts = love.filesystem.getDirectoryItems(path)
+	table.sort (scripts)
+	for _, filename in ipairs(scripts) do
+		skipped = false
+		for _, excluded_name in ipairs(exclude) do
+			if excluded_name == filename then
+				skipped = true
+			end
+		end
+		if filename:sub(#filename-3) == ".lua" and not skipped then
+			require (filename:sub (1, #filename-4))
+		end
+	end
+end
+
 API = {}
-local scripts = love.filesystem.getDirectoryItems('scripts/API')
-table.sort (scripts)
-for _, filename in ipairs(scripts) do
-	if filename:sub(#filename-3) == ".lua" and filename ~= "API_Server.lua" then
-		require (filename:sub (1, #filename-4))
-	end
-end
-
-
-love.filesystem.setRequirePath( 'scripts/?.lua' )
-scripts = love.filesystem.getDirectoryItems("scripts")
-table.sort (scripts)
-for _, filename in ipairs(scripts) do
-	if filename:sub(#filename-3) == ".lua" then
-		require (filename:sub (1, #filename-4))
-	end
-end
+import_directory('scripts/API', {"API_Server.lua"})
+import_directory('scripts')
+import_directory('scripts/Menus')
+import_directory('scripts/Characters')
+import_directory('scripts/Layout')
 
 love.filesystem.setRequirePath( 'scripts/Json/?.lua' )
 Json = require("json")
