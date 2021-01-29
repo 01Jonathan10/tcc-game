@@ -12,7 +12,7 @@ Item.rarities = {
 --TODO: Currencies as actual items
 Item.currency = {
 	diamond = love.graphics.newImage("assets/items/diamond.png"),
-	gold = love.graphics.newImage("assets/items/diamond.png")
+	gold = love.graphics.newImage("assets/items/gold.png")
 }
 
 function Item:new(obj)
