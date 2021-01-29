@@ -52,6 +52,7 @@ function API.get_request(url)
 	return response
 end
 
-function API.error()
+function API.error(data)
 	-- love.event.push('quit')
+	Alert:new(data[1], AlertTypes.error)
 end

@@ -320,7 +320,8 @@ function CharCreation:mousepressed(x,y,k)
 		API.create_player(new_char)
 		Promise:new():success(function(response) 
 			GameController.go_to_menu()
-		end):fail(function() 
+		end):fail(function(data)
+			API.error(data)
 			self.disabled = false
 		end):after(function()
 			self.loading = false

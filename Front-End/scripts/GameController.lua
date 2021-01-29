@@ -4,7 +4,8 @@ GameController.__index = GameController
 function GameController.begin_game()
 	Textbox:dispose()
 	GameController.state = Constants.EnumGameState.LOGIN
-	GameController.login_screen = Login:new()	
+	GameController.login_screen = Login:new()
+	GameController.alert_stack = {}
 end
 
 function GameController.login(player)
@@ -29,8 +30,8 @@ function GameController.go_to_menu()
 			GameController.player = Player:new(API.translate_player(data))
 			GameController.menu = MainMenu:new()
 		end})
-	end):fail(function() 
-		API.error()
+	end):fail(function(data)
+		API.error(data)
 		GameController.player = Character:new({})
 	end)
 end
@@ -46,8 +47,8 @@ function GameController.go_to_menu()
 			GameController.player = Player:new(API.translate_player(data))
 			GameController.menu = MainMenu:new()
 		end})
-	end):fail(function() 
-		API.error()
+	end):fail(function(data)
+		API.error(data)
 		GameController.player = Character:new({})
 	end):after(function()
 		GameController.loading = nil

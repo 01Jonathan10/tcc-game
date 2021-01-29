@@ -1,9 +1,17 @@
 function love.textinput(text)
+	if #GameController.alert_stack > 0 then return end
+
 	if Textbox.active_box then Textbox.active_box:textinput(text) end
 end
 
 function love.mousepressed(x, y, k)
 	local x, y = Utils.convert_coords(x, y)
+
+	if #GameController.alert_stack > 0 then
+		GameController.alert_stack[1]:mousepressed(x, y, k)
+		return
+	end
+
 	if GameController.state == Constants.EnumGameState.MENU then
 		GameController.menu:mousepressed(x, y, k)
 	elseif GameController.state == Constants.EnumGameState.QUEST and k==1 then
@@ -18,6 +26,8 @@ function love.mousepressed(x, y, k)
 end
 
 function love.keypressed(key)
+	if #GameController.alert_stack > 0 then return end
+
 	if Textbox.active_box then 
 		if key == "tab" then
 			Textbox.list[Textbox.active_box.index%#Textbox.list + 1]:trigger()

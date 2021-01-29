@@ -1,1 +1,159 @@
-[{"model": "API.playerclass", "pk": 1, "fields": {"name": "Mage"}}, {"model": "API.playerclass", "pk": 2, "fields": {"name": "Knight"}}, {"model": "API.playerclass", "pk": 3, "fields": {"name": "Thief"}}, {"model": "API.skill", "pk": 1, "fields": {"name": "Basic Attack", "effect": "{\"type\": \"damage\", \"dmg_type\":1, \"power\": 30}", "description": "A basic weapon attack. Deals low physical damage.", "range": "F1", "anim_id": 1, "level_req": 1, "job_req": null}}, {"model": "API.skill", "pk": 2, "fields": {"name": "Fireball", "effect": "{\"type\": \"damage\", \"dmg_type\":2, \"power\": 60}", "description": "The User hurls a ball of flames at a distance, causing magic damage.", "range": "F3,F2,F4,F3L1,F3R1", "anim_id": 2, "level_req": 1, "job_req": 1}}, {"model": "API.item", "pk": 1, "fields": {"name": "Mage's Hat", "type": 2, "wpn_type": 0, "price": 100, "stats": "{}"}}, {"model": "API.item", "pk": 2, "fields": {"name": "Mage's Robe", "type": 3, "wpn_type": 0, "price": 100, "stats": "{}"}}, {"model": "API.item", "pk": 3, "fields": {"name": "Knight's Helm", "type": 2, "wpn_type": 0, "price": 100, "stats": "{}"}}, {"model": "API.item", "pk": 4, "fields": {"name": "Knight's Armor", "type": 3, "wpn_type": 0, "price": 100, "stats": "{}"}}, {"model": "API.item", "pk": 5, "fields": {"name": "Thief's Hat", "type": 2, "wpn_type": 0, "price": 100, "stats": "{}"}}, {"model": "API.item", "pk": 6, "fields": {"name": "Thief's Clothes", "type": 3, "wpn_type": 0, "price": 100, "stats": "{}"}}, {"model": "API.item", "pk": 7, "fields": {"name": "Mage's Staff", "type": 1, "wpn_type": 5, "price": 100, "stats": "{}"}}, {"model": "API.item", "pk": 8, "fields": {"name": "Thief's Daggers", "type": 1, "wpn_type": 2, "price": 100, "stats": "{}"}}, {"model": "API.item", "pk": 9, "fields": {"name": "Knight's Sword", "type": 1, "wpn_type": 1, "price": 100, "stats": "{\"atk\": 10, \"matk\": 0}"}}, {"model": "API.quest", "pk": 1, "fields": {"name": "First Quest", "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eu tellus rutrum velit porttitor interdum. Integer ultrices egestas neque quis convallis. Curabitur egestas lorem in semper porta. In ut urna molestie, sagittis dolor sit amet, cursus metus. Quisque eu risus blandit, volutpat mi eget, pellentesque neque. Phasellus pharetra, urna non consectetur suscipit, ante ligula molestie dolor, sed mattis sem augue a purus. Nunc vel posuere lacus, ut viverra mauris. Nullam semper ornare sagittis. Pellentesque ac vestibulum risus. Praesent dignissim blandit orci eu suscipit. Aliquam erat volutpat. Vestibulum blandit libero ac eros ullamcorper, eget laoreet tortor pharetra. Orci varius natoque penatibus.", "base_energy": 10, "diff_modifier": 10, "map_id": 1}}, {"model": "API.semester", "pk": 1, "fields": {"name": "2020/2"}}, {"model": "API.subject", "pk": 1, "fields": {"name": "Calculus"}}]
+[
+  {
+    "model": "API.playerclass",
+    "pk": 1,
+    "fields": {
+      "name": "Mage"
+    }
+  },
+  {
+    "model": "API.playerclass",
+    "pk": 2,
+    "fields": {
+      "name": "Knight"
+    }
+  },
+  {
+    "model": "API.playerclass",
+    "pk": 3,
+    "fields": {
+      "name": "Thief"
+    }
+  },
+  {
+    "model": "API.skill",
+    "pk": 1,
+    "fields": {
+      "name": "Basic Attack",
+      "effect": "{\"type\": \"damage\", \"dmg_type\":1, \"power\": 30}",
+      "description": "A basic weapon attack. Deals low physical damage.",
+      "range": "F1",
+      "anim_id": 1,
+      "level_req": 1,
+      "job_req": null
+    }
+  },
+  {
+    "model": "API.skill",
+    "pk": 2,
+    "fields": {
+      "name": "Fireball",
+      "effect": "{\"type\": \"damage\", \"dmg_type\":2, \"power\": 60}",
+      "description": "The User hurls a ball of flames at a distance, causing magic damage.",
+      "range": "F3,F2,F4,F3L1,F3R1",
+      "anim_id": 2,
+      "level_req": 1,
+      "job_req": 1
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 1,
+    "fields": {
+      "name": "Mage's Hat",
+      "type": 2,
+      "wpn_type": 0,
+      "price": 100,
+      "stats": "{}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 2,
+    "fields": {
+      "name": "Mage's Robe",
+      "type": 3,
+      "wpn_type": 0,
+      "price": 100,
+      "stats": "{}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 3,
+    "fields": {
+      "name": "Knight's Helm",
+      "type": 2,
+      "wpn_type": 0,
+      "price": 100,
+      "stats": "{}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 4,
+    "fields": {
+      "name": "Knight's Armor",
+      "type": 3,
+      "wpn_type": 0,
+      "price": 100,
+      "stats": "{}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 5,
+    "fields": {
+      "name": "Thief's Hat",
+      "type": 2,
+      "wpn_type": 0,
+      "price": 100,
+      "stats": "{}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 6,
+    "fields": {
+      "name": "Thief's Clothes",
+      "type": 3,
+      "wpn_type": 0,
+      "price": 100,
+      "stats": "{}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 7,
+    "fields": {
+      "name": "Mage's Staff",
+      "type": 1,
+      "wpn_type": 5,
+      "price": 100,
+      "stats": "{}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 8,
+    "fields": {
+      "name": "Thief's Daggers",
+      "type": 1,
+      "wpn_type": 2,
+      "price": 100,
+      "stats": "{}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 9,
+    "fields": {
+      "name": "Knight's Sword",
+      "type": 1,
+      "wpn_type": 1,
+      "price": 100,
+      "stats": "{\"atk\": 10, \"matk\": 0}"
+    }
+  },
+  {
+    "model": "API.quest",
+    "pk": 1,
+    "fields": {
+      "name": "First Quest",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eu tellus rutrum velit porttitor interdum. Integer ultrices egestas neque quis convallis. Curabitur egestas lorem in semper porta. In ut urna molestie, sagittis dolor sit amet, cursus metus. Quisque eu risus blandit, volutpat mi eget, pellentesque neque. Phasellus pharetra, urna non consectetur suscipit, ante ligula molestie dolor, sed mattis sem augue a purus. Nunc vel posuere lacus, ut viverra mauris. Nullam semper ornare sagittis. Pellentesque ac vestibulum risus. Praesent dignissim blandit orci eu suscipit. Aliquam erat volutpat. Vestibulum blandit libero ac eros ullamcorper, eget laoreet tortor pharetra. Orci varius natoque penatibus.",
+      "base_energy": 10,
+      "diff_modifier": 10,
+      "map_id": 1
+    }
+  }
+]

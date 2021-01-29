@@ -3,15 +3,18 @@ from django import forms
 
 from . import models
 
-class PlayerForm( forms.ModelForm ):
-	stats = forms.CharField( widget=forms.Textarea )
-	class Meta:
-		model = models.Player
-		exclude = ()
 
-class PlayerAdmin( admin.ModelAdmin ):
-	form = PlayerForm
-	
+class PlayerForm(forms.ModelForm):
+    stats = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        model = models.Player
+        exclude = ()
+
+
+class PlayerAdmin(admin.ModelAdmin):
+    form = PlayerForm
+
 
 admin.site.register(models.Player, PlayerAdmin)
 admin.site.register(models.Enemy)
