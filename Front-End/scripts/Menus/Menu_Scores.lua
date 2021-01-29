@@ -214,13 +214,14 @@ function ScoresMenu:draw_score(score,x,y)
 end
 
 function ScoresMenu:claim_score()
+	if not self.selected_score then return end
 	API.claim_score(self.selected_score):success(function()
 		self.selected_score.claimed = true
-		GameController.player:gain_currency("diamonds", self.select_score.score*5)
-		self:reload_buttons()
+		GameController.player:gain_currency("diamonds", self.selected_score.score*5)
 	end):after(function()
 		self.loading = nil
 		self.selected_score = nil
+		self:reload_buttons()
 	end)
 end
 
