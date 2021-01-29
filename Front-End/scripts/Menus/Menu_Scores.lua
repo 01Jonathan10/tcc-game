@@ -80,15 +80,19 @@ function ScoresMenu:add_button(node)
 end
 
 function ScoresMenu:close_node_btn(node)
+	local x = 50
+	if node.scores then x = x + 60 end
 	return {
-		x = 20,y = 135 + #self.buttons*30, r = 10, text_size=5, form="circle", text={{0,0,0,1}, "-"},
+		x = x,y = 135 + #self.buttons*30, r = 10, text_size=5, form="circle", text={{0,0,0,1}, "-"},
 		click = function() self:close_node(node) end
 	}
 end
 
 function ScoresMenu:expand_node_btn(node)
+	local x = 50
+	if node.scores then x = x + 60 end
 	return {
-		x = 20,y = 135 + #self.buttons*30, r = 10, text_size=5, form="circle", text={{0,0,0,1}, "+"},
+		x = x,y = 135 + #self.buttons*30, r = 10, text_size=5, form="circle", text={{0,0,0,1}, "+"},
 		click = function() self:expand_node(node) end
 	}
 end
@@ -96,7 +100,7 @@ end
 function ScoresMenu:claim_score_btn(score)
 	if score.claimed then
 		return {
-			x = 750,y = 122 + #self.buttons*30, w = 80, h = 25, text={{0,0,0,1}, ("Claimed"):translate()},
+			x = 730,y = 122 + #self.buttons*30, w = 80, h = 25, text={{0,0,0,1}, ("Claimed"):translate()},
 			text_size = 1.7, disabled = true
 		}
 	else
@@ -134,6 +138,7 @@ function ScoresMenu:show()
 	y = 120
 	x = 60
 
+	View.setColor(0,0,0)
 	for _, semester in ipairs(self.semesters) do
 		level = 0
 		self:show_object(semester, x, y, level)
@@ -185,7 +190,7 @@ function ScoresMenu:show_object(object, x, y, level)
 	View.print(label, x + 100*level + 10, y, 0, 0.5)
 
 	if object.is_score then
-		View.printf(object.score.."/"..object.max, x, y, 1350, "right", 0, 0.5)
+		View.printf(object.score.."/"..object.max, x, y, 1320, "right", 0, 0.5)
 	end
 
 	if level > 0 then

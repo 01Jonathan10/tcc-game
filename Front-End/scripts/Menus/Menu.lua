@@ -8,7 +8,8 @@ function Menu:new(obj)
 	obj.buttons = {}
 	
 	obj.div_img = love.graphics.newImage("assets/menus/Div.png")
-	
+	obj.back_btn_img = love.graphics.newImage("assets/icons/Home.png")
+
 	self.timer = 0
 	
 	setmetatable(obj, self)
@@ -26,7 +27,7 @@ function Menu:draw()
 	
 	View.setColor(1,1,1)
 	if self.back_btn then
-		View.rectangle("fill", 0,0,60,60)
+		View.draw(self.back_btn_img, 0,0,0,0.6)
 	end
 	
 	if self.loading then
