@@ -369,3 +369,7 @@ end
 function Player:unload_mini()
 	self.quest_sprite = nil
 end
+
+function Player:gain_currency(currency, ammount)
+	self[currency] = self[currency] + ammount
+end
