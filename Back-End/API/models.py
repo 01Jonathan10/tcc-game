@@ -250,3 +250,5 @@ class Score(models.Model):
     def claim(self):
         self.claimed = True
         self.save()
+        self.owner.diamonds += self.score * 5
+        self.owner.save()
