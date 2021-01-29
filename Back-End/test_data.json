@@ -1,0 +1,16 @@
+[
+  {
+    "model": "API.semester",
+    "pk": 1,
+    "fields": {
+      "name": "2020/2"
+    }
+  },
+  {
+    "model": "API.subject",
+    "pk": 1,
+    "fields": {
+      "name": "Calculus"
+    }
+  }
+]
