@@ -42,13 +42,13 @@ end
 
 function Menu:draw_btn(btn)
 	if btn.form == "circle" then
-		local size = btn.r/175
+		local size = btn.r/175 * (btn.text_size or 1)
 		self:draw_btn_circle(btn.x, btn.y, btn.r)
-		View.printf(btn.text, btn.x - btn.r, btn.y - btn.r/7, 2*btn.r/size, "center", 0, size)
+		View.printf(btn.text, btn.x - btn.r, btn.y - (btn.text_size or 1) * btn.r/7, 2*btn.r/size, "center", 0, size)
 	else
-		local size = math.min(btn.w, btn.h)/150
+		local size = (btn.text_size or 1) * math.min(btn.w, btn.h)/150
 		self:draw_btn_panel(btn.x, btn.y, btn.w, btn.h)
-		View.printf(btn.text, btn.x, btn.y + btn.h/3, btn.w/size, "center", 0, size)
+		View.printf(btn.text, btn.x, btn.y + (btn.h/3)/(btn.text_size or 1), btn.w/size, "center", 0, size)
 	end
 	View.setColor(1,1,1)
 end

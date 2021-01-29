@@ -3,6 +3,18 @@ Item.__index = Item
 Item.icons = {}
 Item.border_img = love.graphics.newImage("assets/menus/ItemBorder.png")
 
+Item.rarities = {
+	{1,0,0},
+	{0.7,0.7,0.8},
+	{0.99, 0.85, 0.45}
+}
+
+--TODO: Currencies as actual items
+Item.currency = {
+	diamond = love.graphics.newImage("assets/items/diamond.png"),
+	gold = love.graphics.newImage("assets/items/diamond.png")
+}
+
 function Item:new(obj)
 	local obj = obj or {id=0, kind=0}
 	
@@ -19,7 +31,9 @@ function Item:draw_icon(x,y, size, alpha)
 		View.setColor(1,1,1, alpha)
 		View.draw(Item.border_img, x, y, 0, size/100)
 	else
-		View.setColor(1,0,0, alpha)
+		local color = Item.rarities[self.rarity or 1]
+		color[4] = alpha
+		View.setColor(unpack(color))
 		View.draw(Item.border_img, x, y, 0, size/100)
 		View.setColor(1,1,1, alpha)
 		View.draw(Item.icons[self.kind], x, y, 0, size/500)
