@@ -139,5 +139,5 @@ dmypy.json
 #Static
 Back-End/static/data/q_i_info/*.json
 
-**/.idea
-*.idea
+**/.idea/
+*/.idea/
