@@ -13,8 +13,7 @@ function QuestsMenu:setup()
 	
 	self.loading = true
 	
-	API.get_quests()
-	Promise:new():success(function(response)
+	API.get_quests():success(function(response)
 		local each
 		for _, each in ipairs(response) do				
 			table.insert(self.quest_list, Quest:new(each))
@@ -93,8 +92,7 @@ function QuestsMenu:click(x,y,k)
 			self.disabled = true
 			self.loading = true
 			
-			API.enter_quest(self.selection, self.diff_select)
-			Promise:new():success(function(response) 
+			API.enter_quest(self.selection, self.diff_select):success(function(response)
 				MyLib.FadeToColor(0.25, {function()
 					GameController.player:unload_model()
 					GameController.start_quest(response.quest, response.diff, response.actions)

@@ -17,8 +17,7 @@ function SkillMenu:setup()
 	for i=0,2 do table.insert(self.class_quads, View.newQuad(i*100, 0, 100, 100, 300, 100)) end
 		
 	self.loading=true
-	API.get_player_skills()
-	Promise:new():success(function(response) 
+	API.get_player_skills():success(function(response)
 		self.skill_list = response
 		Skill.loaded_skills = Skill:translate_response(response)
 	end):after(function()

@@ -81,8 +81,7 @@ function MainMenu:click(x,y,k)
 end
 
 function MainMenu:request_update()
-	API.update_player()
-	Promise:new():success(function(data) 
+	API.update_player():success(function(data)
 		GameController.player.energy = data.energy or GameController.player.energy
 	end)
 end

@@ -1,14 +1,16 @@
 function API.login_player(login, pass)
 	local data = Utils.table_to_json({username=login, password=pass})
-	API.get_token(data)
+	return API.get_token(data)
 end
 
 function API.get_token(data)	
 	API.channel:push({message = "post", url="/api/get-token/", body=data})
+	return Promise:new()
 end
 
 function API.get_player()
 	API.channel:push({message = "get", url="/api/player/get"})
+	return Promise:new()
 end
 
 function API.create_player(player)
@@ -33,6 +35,7 @@ function API.create_player(player)
 	local player_data = Json.encode(data)
 	
 	API.channel:push({message = "post", url="/api/player/create/", body=player_data})
+	return Promise:new()
 end
 
 function API.translate_player(player_data)

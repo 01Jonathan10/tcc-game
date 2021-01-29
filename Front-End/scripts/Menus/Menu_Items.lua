@@ -63,9 +63,8 @@ function ItemsMenu:setup()
 end
 
 function ItemsMenu:request_item_list()
-	API.get_player_items()
 	self.loading = true
-	Promise:new():success(function(data)
+	API.get_player_items():success(function(data)
 		self.item_list = {{},{},{},{}}
 		for _, each in ipairs(data) do
 			cat = each.type
@@ -89,9 +88,8 @@ function ItemsMenu:request_item_list()
 end
 
 function ItemsMenu:request_equip(item, cat, cosmetic_mode)
-	API.equip_item(item, cat, cosmetic_mode)
 	self.loading = true
-	Promise:new():success(function(data)
+	API.equip_item(item, cat, cosmetic_mode):success(function(data)
 		if cosmetic_mode then
 			if item.id == Constants.NoneItem.id then
 				GameController.player.cosmetics[cat] = nil

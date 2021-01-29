@@ -3,17 +3,19 @@ ScoresMenu.__index = ScoresMenu
 
 function ScoresMenu:setup()
 	self.submenu = Constants.EnumSubmenu.SCORES
-	self.score_tree = {}
-	self.branches = {}
-	
+	self.semesters = {}
 	self.loading = true
-	API.load_scores()
-	Promise:new():success(function(response) 
-		self.score_tree = response
-		self.branches = {}
-		for _, _ in ipairs(self.score_tree) do
-			table.insert(self.branches, nil)
+
+	API.load_scores():success(function(response)
+		self.semesters = response
+		for _, semester in ipairs(self.semesters) do
+			semester.expanded = nil
+			for _, subject in ipairs(semester) do
+				subject.expanded = nil
+			end
 		end
+
+		Utils.PrintTbRec(self.score_tree)
 		-- self:refresh_buttons()
 	end):after(function()
 		self.loading = nil
@@ -63,10 +65,8 @@ function ScoresMenu:draw_score(score,x,y)
 end
 
 function ScoresMenu:claim_score(score)
-	API.claim_score(score)
-	Promise:new():after(function(response) 
-		API.load_scores()
-		Promise:new():success(function(response) 
+	API.claim_score(score):after(function(response)
+		API.load_scores():success(function(response)
 			self.score_tree = response
 			self:refresh_buttons()
 		end):after(function() 

@@ -21,8 +21,7 @@ function GameController.login(player)
 end
 
 function GameController.go_to_menu()
-	API.get_player()
-	Promise:new():success(function(data)
+	API.get_player():success(function(data)
 		MyLib.FadeToColor(0.25, {function()
 			GameController.login_screen = nil
 			GameController.state = Constants.EnumGameState.MENU
@@ -37,9 +36,8 @@ function GameController.go_to_menu()
 end
 
 function GameController.go_to_menu()
-	API.get_player()
 	GameController.loading = true
-	Promise:new():success(function(data)
+	API.get_player():success(function(data)
 		MyLib.FadeToColor(0.25, {function()
 			GameController.login_screen = nil
 			GameController.state = Constants.EnumGameState.MENU

@@ -19,8 +19,7 @@ function Map:new(quest)
 	map:set_camera_player()
 	
 	self.loading = true
-	API.get_skills(quest.id)
-	Promise:new():success(function(response_data)
+	API.get_skills(quest.id):success(function(response_data)
 		Skill.loaded_skills = Skill:translate_response(response_data)						
 		local idx, id
 		for idx, skill in ipairs(GameController.player.skills) do
@@ -542,15 +541,14 @@ function Map:pass_turn()
 end
 
 function Map:make_request()
-	API.execute_quest_actions(self.request_queue)
+	self:update_promise()
 	self.loading = true
 	self.request_queue = {}
-	self:update_promise()
 end
 
 function Map:update_promise()
-	Promise:new():success(function(response_data) 
-		local new_action, idx
+	API.execute_quest_actions(self.request_queue):success(function(response_data)
+		local new_action
 		self.action_queue = self.action_queue or {}
 						
 		for idx = self.action_count+1,#response_data.actions do

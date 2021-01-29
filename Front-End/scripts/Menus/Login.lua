@@ -58,11 +58,10 @@ function Login:mousepressed(x,y,k)
 end
 
 function Login:login()
-	API.login_player(self.login_box.text, self.pass_box.text)
 	self.loading=true
 	self.invalid = false
 	self.message = nil
-	Promise:new():success(function(data)
+	API.login_player(self.login_box.text, self.pass_box.text):success(function(data)
 		local player = {}
 		
 		API.channel:push({message="set_token", token=data.token})

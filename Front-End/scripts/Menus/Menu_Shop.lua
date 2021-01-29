@@ -24,8 +24,7 @@ function ShopMenu:setup()
 	}
 	
 	self.loading = true
-	API.get_shop_items()
-	Promise:new():success(function(response) 
+	API.get_shop_items():success(function(response)
 		self.item_list = self:organize_and_load(response)
 	end):after(function() 
 		self.loading = nil
@@ -147,11 +146,11 @@ end
 
 function ShopMenu:buy_item()
 	if not self.selection then return end
-	API.buy_item(self.selection)
+
 	self.loading = true
 	self.buttons[1].disabled = true
 	
-	Promise:new():success(function()
+	API.buy_item(self.selection):success(function()
 		GameController.player.gold = GameController.player.gold - self.selection.price
 		self.selection.bought = true
 		self.selection = nil

@@ -40,8 +40,7 @@ function TasksMenu:setup()
 	self.player_task_buttons = {}
 	self.other_task_buttons = {}
 	
-	API.load_tasks()
-	Promise:new():success(function(response) 
+	API.load_tasks():success(function(response)
 		self.task_list = response
 		self:register_buttons()
 		self:update_scrolls()
@@ -159,27 +158,23 @@ function TasksMenu:close_popup()
 end
 
 function TasksMenu:review_task(task, is_positive)
-	API.review_task(task, is_positive)
-	self:reload_promise()
+	self:reload_promise(API.review_task(task, is_positive))
 end
 
 function TasksMenu:finish_task(task)
 	if task.finished then return end
-	API.finish_task(task)
-	self:reload_promise()
+	self:reload_promise(API.finish_task(task))
 end
 
 function TasksMenu:register_task()
-	API.create_task(self.creating_task)
-	self:reload_promise()
+	self:reload_promise(API.create_task(self.creating_task))
 	self:close_popup()
 end
 
-function TasksMenu:reload_promise()
+function TasksMenu:reload_promise(promise)
 	self.loading = true
-	Promise:new():after(function(response)
-		API.load_tasks()
-		Promise:new():success(function(response)
+	promise:after(function()
+		API.load_tasks():success(function(response)
 			self.task_list = response
 			self:register_buttons()
 			self:update_scrolls()
