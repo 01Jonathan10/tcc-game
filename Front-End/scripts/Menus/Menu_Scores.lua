@@ -214,14 +214,12 @@ function ScoresMenu:draw_score(score,x,y)
 end
 
 function ScoresMenu:claim_score()
-	API.claim_score(self.selected_score):after(function()
-		API.load_scores():success(function(response)
-			self.semesters = response
-			self:reload_buttons()
-		end):after(function() 
-			self.loading = nil
-			self.selected_score = nil
-		end)
+	API.claim_score(self.selected_score):success(function()
+		self.selected_score.claimed = true
+		self:reload_buttons()
+	end):after(function()
+		self.loading = nil
+		self.selected_score = nil
 	end)
 end
 
