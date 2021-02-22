@@ -28,6 +28,9 @@ function TasksMenu:setup()
 	self.sprites = {
 		bg_img = love.graphics.newImage("assets/menus/MenuTasks.png"),
 		tab = love.graphics.newImage("assets/menus/ShopTab.png"),
+		icon_check = love.graphics.newImage("assets/icons/TaskBtnCheck.png"),
+		icon_x = love.graphics.newImage("assets/icons/TaskBtnX.png"),
+		icon_details = love.graphics.newImage("assets/icons/TaskBtnDetails.png"),
 	}
 	
 	self.loading=true
@@ -89,6 +92,7 @@ function TasksMenu:register_buttons()
 		})
 		table.insert(self.player_task_buttons, {
 			x = x+235, y = y+42, r = 12, text = "", form = "circle",
+			icon = self.sprites.icon_details,
 			click = function()
 			if not self.viewing_details then self.viewing_details = task end end
 		})
@@ -102,14 +106,17 @@ function TasksMenu:register_buttons()
 	
 		table.insert(self.other_task_buttons, {
 			x = x+255, y = y+15, r = 10, text = "", form = "circle", disabled=task.reviewed,
+			icon = self.sprites.icon_check,
 			click = function() self:review_task(task, true) end
 		})
 		table.insert(self.other_task_buttons, {
 			x = x+255, y = y+40, r = 10, text = "", form = "circle", disabled=task.reviewed,
+			icon = self.sprites.icon_x,
 			click = function() self:review_task(task, false) end
 		})
 		table.insert(self.other_task_buttons, {
 			x = x+255, y = y+72, r = 12, text = "", form = "circle",
+			icon = self.sprites.icon_details,
 			click = function()
 			if not self.viewing_details then self.viewing_details = task end end
 		})
@@ -231,7 +238,7 @@ function TasksMenu:show()
 			
 			View.print(task.approvals, x+230, y+10, 0, 1/5)
 			View.print(task.reports, x+230, y+35, 0, 1/5)
-			
+
 			self:draw_btn(self.other_task_buttons[btn_idx])
 			self:draw_btn(self.other_task_buttons[btn_idx+1])
 			self:draw_btn(self.other_task_buttons[btn_idx+2])
