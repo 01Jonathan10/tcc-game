@@ -7,7 +7,36 @@ function MainMenu:setup()
 	self.timer = 0
 	self.frame = 1
 	self.menu_list = {MainMenu, ItemsMenu, ScoresMenu, QuestsMenu, SkillMenu, ShopMenu, TasksMenu, HelpMenu, OptionsMenu}
-	self.menu_names = {"Items", "Scores", "Quests", "Skills", "Shop", "Tasks", "Help", "Options"}
+
+	self.buttons = {
+		{
+			x = 1000,y = 420, r = 50, form = 'circle', text="",
+			click = function() self:setMenu(2) end
+		},
+		{
+			x = 1080,y = 250, r = 100, form = 'circle', text="",
+			click = function() self:setMenu(4) end
+		},
+		{
+			x = 1000,y = 540, r = 50, form = 'circle', text="",
+			click = function() self:setMenu(7) end
+		},
+		{
+			x = 1160,y = 420, r = 50, form = 'circle', text="",
+			click = function() self:setMenu(3) end
+		},
+		{
+			x = 1160,y = 540, r = 50, form = 'circle', text="",
+			click = function() self:setMenu(6) end
+		},
+	}
+
+	self.icons = love.graphics.newImage("assets/icons/MenuIcons.png")
+	self.icon_quads = {}
+
+	for i=0,4 do
+		table.insert(self.icon_quads, View.newQuad(i*200,0,200,200,1000,200))
+	end
 	
 	GameController.player:load_model()
 	
@@ -22,8 +51,8 @@ function MainMenu:show()
 	View.draw(self.bg_img,0,0)
 	player:draw_model(350,60,0.8,self.frame)
 	
-	View.print(player.name, 350, 10)
-	View.print(player.class.name..", Level "..player.level, 350, 70, 0, 1/2)
+	View.print(player.name, 10, 500)
+	View.print(player.class.name..", Level "..player.level, 10, 560, 0, 1/2)
 	
 	
 	View.print(("Energy"):translate(), 10, 610, 0, 2/5)
@@ -40,14 +69,10 @@ function MainMenu:show()
 	View.rectangle("fill", 10, 685, 330*player.xp/player:xp_to_next(), 20)
 	View.setColor(1,1,1)
 	View.printf(player.xp.."/"..player:xp_to_next(), 10, 685, 825, "center", 0, 2/5)
-	
-	
-	local i,x,y
-	for i=1,8 do
-		x = 930 + math.floor((i-1)/4)*180
-		y = 100 + 150*((i-1)%4)
-		View.rectangle("fill", x, y, 120, 120)
-		View.printf({{0,0,0},self.menu_names[i]}, x, y+45, 240, "center", 0, 1/2)
+
+	for index, btn in ipairs(self.buttons) do
+		self:draw_btn(btn)
+		View.draw(self.icons, self.icon_quads[index], btn.x - btn.r - 1, btn.y - btn.r - 1, 0, btn.r/98)
 	end
 end
 
@@ -72,12 +97,16 @@ function MainMenu:click(x,y,k)
 		if (y>=100 and y<=670 and (y-100)%150<=120) then 
 			lin = math.floor((y+50)/150)
 			selection = 4*col + lin + 1
-			self.disabled = true
-			MyLib.FadeToColor(0.25, {function()
-				self.menu_list[selection]:new()
-			end})
+			self:setMenu(selection)
 		end
 	end
+end
+
+function MainMenu:setMenu(selection)
+	self.disabled = true
+	MyLib.FadeToColor(0.25, {function()
+		self.menu_list[selection]:new()
+	end})
 end
 
 function MainMenu:request_update()
