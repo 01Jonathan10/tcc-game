@@ -198,6 +198,9 @@ function CharCreation:draw_trait_picker()
 	
 	for i, option in ipairs(self.sprites[self.picking_trait].quads) do
 		x, y = 920 + 100*((i-1)%3), 150 + 100*math.floor((i-1)/3)
+		View.setColor(0.5,0.5,0.5)
+		View.rectangle("fill", x, y, 100, 100)
+		View.setColor(1,1,1)
 		View.rectangle("line", x, y, 100, 100)
 	end
 	
@@ -343,7 +346,7 @@ function CharCreation:mousepressed(x,y,k)
 		API.create_player(new_char):success(function(response)
 			GameController.go_to_menu()
 		end):fail(function(data)
-			API.error(data)
+			Alert:new("Name must be filled", AlertTypes.error)
 			self.disabled = false
 		end):after(function()
 			self.loading = false

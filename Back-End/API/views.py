@@ -52,8 +52,8 @@ class CreatePlayer(BaseView):
 
         serializer = serializers.PlayerSerializer(data=request.data)
 
-        if serializer.is_valid() == False:
-            return Response({'status': 'fail'})
+        if not serializer.is_valid():
+            raise Exception("Name must be filled")
 
         player = serializer.save()
 
