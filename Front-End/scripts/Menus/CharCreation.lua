@@ -60,13 +60,13 @@ function CharCreation:new(obj)
 		}
 	}
 	
-	for i =0,1 do 
-		table.insert(obj.sprites.hair.quads, View.newQuad(0, i*500, 500, 500, 1000, 7000))
-		table.insert(obj.sprites.hair.f_quads, View.newQuad(500, i*500, 500, 500, 1000, 7000)) 
+	for i =0,8 do
+		table.insert(obj.sprites.hair.quads, View.newQuad(0, i*500, 500, 500, 1000, 4500))
+		table.insert(obj.sprites.hair.f_quads, View.newQuad(500, i*500, 500, 500, 1000, 4500))
 	end
 	
-	for i=0,1 do
-		table.insert(obj.sprites.eyes.quads, View.newQuad((i%4)*500, math.floor(i/4)*500, 500, 500, 2000, 2000))
+	for i=0,8 do
+		table.insert(obj.sprites.eyes.quads, View.newQuad((i%4)*500, math.floor(i/4)*500, 500, 500, 2000, 1500))
 	end
 	
 	obj.picker_imgs = {
@@ -191,13 +191,13 @@ function CharCreation:draw()
 end
 
 function CharCreation:draw_trait_picker()
-	View.printf(("Appearance"):translate(), 950, 100, 400,"center", 0, 3/5)
+	View.printf(("Appearance"):translate(), 970, 70, 400,"center", 0, 3/5)
 	
 	local i, option
 	local x, y
 	
 	for i, option in ipairs(self.sprites[self.picking_trait].quads) do
-		x, y = 920 + 100*((i-1)%3), 150 + 100*math.floor((i-1)/3)
+		x, y = 940 + 100*((i-1)%3), 120 + 100*math.floor((i-1)/3)
 		View.setColor(0.5,0.5,0.5)
 		View.rectangle("fill", x, y, 100, 100)
 		View.setColor(1,1,1)
@@ -207,7 +207,7 @@ function CharCreation:draw_trait_picker()
 	love.graphics.setShader(self.shader)	
 	
 	for i, option in ipairs(self.sprites[self.picking_trait].quads) do
-		x, y = 920 + 100*((i-1)%3), 150 + 100*math.floor((i-1)/3)
+		x, y = 940 + 100*((i-1)%3), 120 + 100*math.floor((i-1)/3)
 		if self.picking_trait == "eyes" then
 			View.draw(self.new_char.model_data.body.img, self.new_char.model_data.body.quads[1], x+55, y-20, 0, 1/2, 1/2, 150)
 			View.draw(self.sprites[self.picking_trait].img, self.sprites[self.picking_trait].quads[i], x+50, y-30, 0, 0.4, 0.4, 250)
@@ -218,7 +218,7 @@ function CharCreation:draw_trait_picker()
 	
 	if self.picking_trait == Constants.EnumTrait.HAIR then
 		for i, option in ipairs(self.sprites[self.picking_trait].quads) do
-			x, y = 920 + 100*((i-1)%3), 150 + 100*math.floor((i-1)/3)
+			x, y = 940 + 100*((i-1)%3), 120 + 100*math.floor((i-1)/3)
 			View.draw(self.sprites[self.picking_trait].img, self.sprites[self.picking_trait].f_quads[i], x, y, 0, 0.2)
 		end
 	end
@@ -320,8 +320,8 @@ function CharCreation:mousepressed(x,y,k)
 		local max_op = table.getn(self.sprites[self.picking_trait].quads)
 		local curr_op = nil
 		
-		if x > 920 and x < 1220 and y > 150 and y < 650 then
-			curr_op = math.ceil((x-920)/100) + 3*math.floor((y-150)/100)
+		if x > 940 and x < 1240 and y > 120 and y < 620 then
+			curr_op = math.ceil((x-940)/100) + 3*math.floor((y-120)/100)
 			if curr_op <= max_op then
 				self.new_char.traits[self.picking_trait] = curr_op
 			end
@@ -340,16 +340,20 @@ function CharCreation:mousepressed(x,y,k)
 	end
 	
 	if x >= 970 and x <= 1210 and y >= 630 and y <= 690 then
-		self.disabled = true
-		self.loading = true
-		local new_char = self.new_char
-		API.create_player(new_char):success(function(response)
-			GameController.go_to_menu()
-		end):fail(function(data)
-			Alert:new("Name must be filled", AlertTypes.error)
-			self.disabled = false
-		end):after(function()
-			self.loading = false
-		end)
+
+		self.sprites.hair.img = love.graphics.newImage('assets/character/Heads.png')
+		self.sprites.eyes.img = love.graphics.newImage('assets/character/Eyes.png')
+
+		--self.disabled = true
+		--self.loading = true
+		--local new_char = self.new_char
+		--API.create_player(new_char):success(function(response)
+		--	GameController.go_to_menu()
+		--end):fail(function(data)
+		--	Alert:new("Name must be filled", AlertTypes.error)
+		--	self.disabled = false
+		--end):after(function()
+		--	self.loading = false
+		--end)
 	end	
 end

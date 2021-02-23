@@ -113,9 +113,9 @@ function Player:load_model()
 	table.insert(self.model_data.body.quads, View.newQuad((2%3)*300, math.floor(2/3)*300, 300, 300, 900, 900)) 
 	
 	for i =0,16 do 
-		table.insert(self.model_data.hair.quads, View.newQuad(0, i*500, 500, 500, 1000, 7000))
-		table.insert(self.model_data.eyes.quads, View.newQuad((i%4)*500, math.floor(i/4)*500, 500, 500, 2000, 2000))
-		table.insert(self.model_data.hair.f_quads, View.newQuad(500, i*500, 500, 500, 1000, 7000))
+		table.insert(self.model_data.hair.quads, View.newQuad(0, i*500, 500, 500, 1000, 4500))
+		table.insert(self.model_data.eyes.quads, View.newQuad((i%4)*500, math.floor(i/4)*500, 500, 500, 2000, 1500))
+		table.insert(self.model_data.hair.f_quads, View.newQuad(500, i*500, 500, 500, 1000, 4500))
 	end
 	
 	table.insert(self.model_data.helm.quads, View.newQuad(0, 0, 500, 500, 1000, 500))
