@@ -9,9 +9,9 @@ function CharCreation:new(obj)
 	setmetatable(obj, self)
 	
 	Textbox:init()
-	obj.name_box = Textbox:new("name",420,200,440,50, {1,0.5,0.5})
+	obj.name_box = Textbox:new("name",930,550,320,50, {1,0.5,0.5})
 	
-	obj.bg_img = love.graphics.newImage("assets/CharCreation.png")
+	obj.bg_img = love.graphics.newImage("assets/menus/CharCreation.png")
 	
 	obj.class_options = Class:get_starter_classes()
 	obj.selected_class = obj.class_options[math.random(1,#obj.class_options)]
@@ -39,10 +39,13 @@ function CharCreation:new(obj)
 	setmetatable(obj.new_char, Player)
 	
 	obj.class_icons = love.graphics.newImage('assets/icons/Class_Icons.png')
+	obj.gender_icons = love.graphics.newImage('assets/icons/GenderIcons.png')
 	obj.class_quads = {}
-	
+	obj.gender_quads = {}
+
 	for i=0,2 do obj.class_quads[i+1] = View.newQuad(i*100, 0, 100, 100, 300, 100) end
-	
+	for i=0,1 do obj.gender_quads[i+1] = View.newQuad(i*100, 0, 100, 100, 200, 100) end
+
 	obj.shader = Constants.char_shader
 		
 	obj.sprites = {
@@ -72,9 +75,9 @@ function CharCreation:new(obj)
 	}
 	
 	obj.pickers = {
-		{x=590, y=360, trait=Constants.EnumTrait.HAIR, image = obj.picker_imgs.colorpick},
-		{x=830, y=360, trait=Constants.EnumTrait.EYES, image = obj.picker_imgs.colorpick},
-		{x=590, y=540, trait=Constants.EnumTrait.SKIN, image = obj.picker_imgs.skinpick},
+		{x=220, y=200, trait=Constants.EnumTrait.HAIR, image = obj.picker_imgs.colorpick},
+		{x=220, y=350, trait=Constants.EnumTrait.EYES, image = obj.picker_imgs.colorpick},
+		{x=120, y=590, trait=Constants.EnumTrait.SKIN, image = obj.picker_imgs.skinpick},
 	}
 
 	obj.shader:sendColor("hair_color", obj.new_char.trait_colors.hair)
@@ -94,6 +97,9 @@ end
 
 function CharCreation:set_class()
 	local class_offset = (self.selected_class.id-1)*2
+	if self.new_char.gender == Constants.EnumGender.M then
+		class_offset = class_offset + 9
+	end
 	self.new_char.equipment = {
 		[Constants.ItemCategory.HEAD]  = Item:new({id=0, kind=class_offset+1}),
 		[Constants.ItemCategory.ARMOR] = Item:new({id=0, kind=class_offset+2}),
@@ -109,44 +115,60 @@ function CharCreation:draw()
 	
 	View.draw(self.bg_img, 0, 0)
 	
+	character:draw_model(420,180,0.6,self.frame)
+	
+	View.printf(("Name"):translate(), 990, 510, 400, "center", 0, 1/2)
+	
+	View.print(("Hair"):translate(),310,180, 0, 1/2)
+	View.setColor(0.5,0.5,0.5)
+	View.rectangle("fill", 60, 150, 100,100)
+	View.setColor(1,1,1)
+	View.rectangle("line", 60, 150, 100,100)
+
+	View.print(("Face"):translate(),310,330, 0, 1/2)
+	View.setColor(0.5,0.5,0.5)
+	View.rectangle("fill", 60, 300, 100,100)
+	View.setColor(1,1,1)
+	View.rectangle("line", 60, 300, 100, 100)
+
+	View.print(("Skin tone"):translate(),180,575, 0, 1/2)
+
 	love.graphics.setShader(self.shader)
-	
-	View.draw(self.sprites.hair.img, self.sprites.hair.quads[character.traits.hair], 450, 310, 0, 0.2)
-	View.draw(self.sprites.hair.img, self.sprites.hair.f_quads[character.traits.hair], 450, 310, 0, 0.2)
-	
-	View.draw(self.new_char.model_data.body.img, self.new_char.model_data.body.quads[1], 740, 290, 0, 1/2, 1/2, 150)
-	View.draw(self.sprites.eyes.img, self.sprites.eyes.quads[character.traits.eyes], 735, 280, 0, 0.4, 0.4, 250)
-		
+
+	View.draw(self.sprites.hair.img, self.sprites.hair.quads[character.traits.hair], 60, 150, 0, 0.2)
+	View.draw(self.sprites.hair.img, self.sprites.hair.f_quads[character.traits.hair], 60, 150, 0, 0.2)
+
+	View.draw(self.new_char.model_data.body.img, self.new_char.model_data.body.quads[1], 115, 280, 0, 1/2, 1/2, 150)
+	View.draw(self.sprites.eyes.img, self.sprites.eyes.quads[character.traits.eyes], 110, 270, 0, 0.4, 0.4, 250)
+
 	love.graphics.setShader()
-	
-	character:draw_model(30,90,0.6,self.frame)
-	
-	View.printf(("Name"):translate(),600,150,160,"center",0,1/2)
-	
-	View.printf(("Hair"):translate(),500,280,240,"center",0,1/3)
-	View.rectangle("line", 450, 310, 100,100)
-	
-	View.printf(("Face"):translate(),740,280,240,"center",0,1/3)
-	View.rectangle("line", 690, 310, 100,100)
-	
-	View.printf(("Gender and skin"):translate(),460,450,480,"center",0,1/3)
-	View.rectangle("line", 450, 490, 100,100)
-	
-	View.printf(("Class"):translate(),740,450,240,"center",0,1/3)
-	View.draw(self.class_icons, self.class_quads[self.selected_class.id], 650, 505, 50)
-	View.print(self.selected_class.name:translate(),780,525,0,1/2)
-	
+
+	if self.new_char.gender == Constants.EnumGender.F then
+		View.draw(self.shine_img, 40, 400, 0, 0.7)
+	else
+		View.draw(self.shine_img, 150, 400, 0, 0.7)
+	end
+
+	View.setColor(0,0,0,0.5)
+	View.circle("fill", 223, 203, Constants.PICKER_RADIUS)
 	love.graphics.setColor(character.trait_colors.hair)
-	View.circle("fill", 590, 360, Constants.PICKER_RADIUS)
-	
+	View.circle("fill", 220, 200, Constants.PICKER_RADIUS)
+
+	View.setColor(0,0,0,0.5)
+	View.circle("fill", 223, 353, Constants.PICKER_RADIUS)
 	love.graphics.setColor(character.trait_colors.eyes)
-	View.circle("fill", 830, 360, Constants.PICKER_RADIUS)
-	
+	View.circle("fill", 220, 350, Constants.PICKER_RADIUS)
+
+	View.setColor(0,0,0,0.5)
+	View.circle("fill", 123, 593, Constants.PICKER_RADIUS)
 	love.graphics.setColor(character.trait_colors.skin)
-	View.circle("fill", 590, 540, Constants.PICKER_RADIUS)
+	View.circle("fill", 120, 590, Constants.PICKER_RADIUS)
 	
 	love.graphics.setColor(1,1,1)
-	
+
+	View.draw(self.gender_icons, self.gender_quads[1], 90, 450, 0, 0.7)
+	View.draw(self.gender_icons, self.gender_quads[2], 200, 450, 0, 0.7)
+
 	if self.picker then
 		local picker = self.picker
 		View.draw(picker.image,picker.x-100,picker.y-100)
@@ -156,13 +178,12 @@ function CharCreation:draw()
 		self:draw_trait_picker()
 	else
 		self:draw_class_picker()
-		self:draw_stats()
 	end
 	
 	View.setColor(0.3,0.3,0.3)
-	View.rectangle("fill", 520, 630, 240, 60)
+	View.rectangle("fill", 970, 630, 240, 60)
 	View.setColor(1,1,1)
-	View.printf("Ready", 540, 640, 250, "center", 0, 4/5)
+	View.printf("Ready", 990, 640, 250, "center", 0, 4/5)
 	
 	if self.loading then
 		Utils.draw_loading(self.timer/15)
@@ -176,14 +197,14 @@ function CharCreation:draw_trait_picker()
 	local x, y
 	
 	for i, option in ipairs(self.sprites[self.picking_trait].quads) do
-		x, y = 920 + 100*((i-1)%3), 220 + 100*math.floor((i-1)/3)
+		x, y = 920 + 100*((i-1)%3), 150 + 100*math.floor((i-1)/3)
 		View.rectangle("line", x, y, 100, 100)
 	end
 	
 	love.graphics.setShader(self.shader)	
 	
 	for i, option in ipairs(self.sprites[self.picking_trait].quads) do
-		x, y = 920 + 100*((i-1)%3), 220 + 100*math.floor((i-1)/3)
+		x, y = 920 + 100*((i-1)%3), 150 + 100*math.floor((i-1)/3)
 		if self.picking_trait == "eyes" then
 			View.draw(self.new_char.model_data.body.img, self.new_char.model_data.body.quads[1], x+55, y-20, 0, 1/2, 1/2, 150)
 			View.draw(self.sprites[self.picking_trait].img, self.sprites[self.picking_trait].quads[i], x+50, y-30, 0, 0.4, 0.4, 250)
@@ -194,7 +215,7 @@ function CharCreation:draw_trait_picker()
 	
 	if self.picking_trait == Constants.EnumTrait.HAIR then
 		for i, option in ipairs(self.sprites[self.picking_trait].quads) do
-			x, y = 920 + 100*((i-1)%3), 220 + 100*math.floor((i-1)/3)
+			x, y = 920 + 100*((i-1)%3), 150 + 100*math.floor((i-1)/3)
 			View.draw(self.sprites[self.picking_trait].img, self.sprites[self.picking_trait].f_quads[i], x, y, 0, 0.2)
 		end
 	end
@@ -215,10 +236,6 @@ function CharCreation:draw_class_picker()
 	for i, class in ipairs(self.class_options) do
 		View.draw(self.class_icons,self.class_quads[class.id], 845 + 100*i, 150, 0, 1/2)
 	end
-end
-
-function CharCreation:draw_stats()
-	View.printf(("Stats"):translate(), 980, 400, 300,"center", 0, 3/5)
 end
 
 function CharCreation:update(dt)
@@ -271,31 +288,37 @@ function CharCreation:mousepressed(x,y,k)
 	
 	self.picker = nil
 	
-	if x >= 450 and x <= 550 and y >= 310 and y <= 410 then
+	if x >= 60 and x <= 160 and y >= 150 and y <= 250 then
 		self.picking_trait = Constants.EnumTrait.HAIR
 		return
 	end
 	
-	if x >= 690 and x <= 790 and y >= 310 and y <= 410 then
+	if x >= 60 and x <= 160 and y >= 300 and y <= 400 then
 		self.picking_trait = Constants.EnumTrait.EYES
 		return
 	end
-	
-	if x >= 450 and x <= 550 and y >= 490 and y <= 590 then
-		if self.new_char.gender == Constants.EnumGender.F then
-			self.new_char.gender = Constants.EnumGender.M
-		else
-			self.new_char.gender = Constants.EnumGender.F
-		end
+
+	View.draw(self.gender_icons, self.gender_quads[1], 90, 450, 0, 0.7)
+	View.draw(self.gender_icons, self.gender_quads[2], 200, 450, 0, 0.7)
+
+	if ((x-125)*(x-125) + (y-485)*(y-485)<(35*35)) then
+		self.new_char.gender = Constants.EnumGender.F
 		self.new_char:update_model("body")
+		self:set_class()
+	end
+
+	if ((x-235)*(x-235) + (y-485)*(y-485)<(35*35)) then
+		self.new_char.gender = Constants.EnumGender.M
+		self.new_char:update_model("body")
+		self:set_class()
 	end
 	
 	if self.picking_trait then
 		local max_op = table.getn(self.sprites[self.picking_trait].quads)
 		local curr_op = nil
 		
-		if x > 920 and x < 1220 and y > 220 and y < 720 then
-			curr_op = math.ceil((x-920)/100) + 3*math.floor((y-220)/100)
+		if x > 920 and x < 1220 and y > 150 and y < 650 then
+			curr_op = math.ceil((x-920)/100) + 3*math.floor((y-150)/100)
 			if curr_op <= max_op then
 				self.new_char.traits[self.picking_trait] = curr_op
 			end
@@ -313,7 +336,7 @@ function CharCreation:mousepressed(x,y,k)
 		end
 	end
 	
-	if x >= 520 and x <= 760 and y >= 630 and y <= 690 then
+	if x >= 970 and x <= 1210 and y >= 630 and y <= 690 then
 		self.disabled = true
 		self.loading = true
 		local new_char = self.new_char

@@ -9,7 +9,7 @@ from .constants import ItemType
 class PlayerController:
     @staticmethod
     def gain_starting_items(player):
-        items = Item.objects.filter(name__startswith=player.job.name + "'")
+        items = Item.objects.filter(name__startswith=player.job.name + "'", name__endswith=player.gender + ')')
         for item in items:
             ItemInstance.objects.create(item=item, owner=player, equipped=True)
 
