@@ -1,6 +1,6 @@
 import datetime
 from dateutil.relativedelta import *
-
+from django.db.models import Q
 
 from .models import Item, ItemInstance, Task, TaskInstance
 from .constants import ItemType
@@ -9,7 +9,8 @@ from .constants import ItemType
 class PlayerController:
     @staticmethod
     def gain_starting_items(player):
-        items = Item.objects.filter(name__startswith=player.job.name + "'", name__endswith=player.gender + ')')
+        items = Item.objects.filter(name__startswith=player.job.name + "'")
+        items = items.filter(Q(name__endswith=player.gender + ')') | Q(type=1))
         for item in items:
             ItemInstance.objects.create(item=item, owner=player, equipped=True)
 
