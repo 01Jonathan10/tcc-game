@@ -13,10 +13,9 @@ function Map:a_star(x_s, y_s, x_f, y_f)
 	local goal = {x=x_f,y=y_f}
 	
 	local openSet = {start}
-	local closedSet = {}
-	
-	local current = nil
-	local currentKey = nil
+
+	local current
+	local currentKey
 	local smallest = 0
 	
     while table.getn(openSet) > 0 do
