@@ -657,14 +657,15 @@ function Map:resolve()
 	elseif action.action == "finish" then
 		local message = "You won the battle! Congratulations!"
 		if not action.victory then message = "You lost the battle..." end
-		
-		self.curr_action = {type = "message", message=message, after = function()
-			self.curr_action = {type="end"}
+
+		self.curr_action = {type="end"}
+
+		Alert:new(message, AlertTypes.notification, function()
 			MyLib.FadeToColor(0.25, {function()
 				GameController.unload_map()
 				GameController.go_to_menu()
 			end})
-		end}
+		end)
 	end
 end
 

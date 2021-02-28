@@ -6,12 +6,13 @@ AlertTypes = {
 	notification = "n"
 }
 
-function Alert:new(message, type)
+function Alert:new(message, type, callback)
 	local obj = {
 		message = message or "Error",
 		type = type or AlertTypes.error,
+		callback = callback or function() end,
 		btn = {
-			x = 600, y = 400, w=80, h=40, text = {{0.8, 0, 0, 1}, ("Close"):translate()}
+			x = 600, y = 400, w=80, h=40, text = {Alert.get_color(type or AlertTypes.error), ("Close"):translate()}
 		}
 	}
 
@@ -27,11 +28,22 @@ end
 function Alert:draw()
 	View.setColor(0,0,0,0.4)
 	View.rectangle("fill", 0,0,1280,720)
-	
+
 	self:draw_panel()
 	self:draw_btn(self.btn)
 
-	View.printf({{0.8,0,0}, self.message}, 460, 320, 900, "center", 0, 2/5)
+	local color = Alert.get_color(self.type)
+
+	View.printf({color, self.message}, 460, 320, 900, "center", 0, 2/5)
+end
+
+function Alert.get_color(type)
+	local colors = {
+		[AlertTypes.error] = {0.8,0,0},
+		[AlertTypes.notification] = {0,0,0}
+	}
+
+	return colors[type] or {0,0,0}
 end
 
 function Alert:draw_panel()
@@ -51,6 +63,7 @@ function Alert:mousepressed(x, y, k)
 	if k == 1 then
 		if x >= btn.x and x <= btn.x + btn.w and y >= btn.y and y <= btn.y + btn.h then
 			table.remove(GameController.alert_stack, 1)
+			self.callback()
 		end
 	end
 end
