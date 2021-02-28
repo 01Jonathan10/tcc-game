@@ -32,7 +32,6 @@ function Map:draw()
 	View.pop()
 	
 	if self.loading then
-		print("loading")
 		Utils.draw_loading(self.timer/10)
 	end
 end

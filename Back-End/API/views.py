@@ -274,8 +274,6 @@ class ScoreList(BaseView):
 
         semesters = models.Semester.objects.filter(score__in=player_scores).all().distinct()
 
-        print(semesters)
-
         response = []
 
         for semester in semesters:

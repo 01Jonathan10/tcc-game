@@ -20,8 +20,6 @@ function Alert:new(message, type, callback)
 
 	table.insert(GameController.alert_stack, 1, obj)
 
-	print(obj.message)
-
 	return obj
 end
 
