@@ -343,6 +343,8 @@ function CharCreation:mousepressed(x,y,k)
 	
 	if x >= 970 and x <= 1210 and y >= 630 and y <= 690 then
 
+		--TODO Uncomment
+
 		self.sprites.hair.img = love.graphics.newImage('assets/character/Heads.png')
 		self.sprites.eyes.img = love.graphics.newImage('assets/character/Eyes.png')
 		self.new_char.model_data = nil
