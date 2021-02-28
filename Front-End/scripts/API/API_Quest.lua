@@ -11,4 +11,5 @@ end
 
 function API.update_map_actions()
 	API.channel:push({message = "get", url="/api/quest/actions/"})
+	return Promise:new()
 end
