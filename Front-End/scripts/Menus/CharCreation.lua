@@ -21,7 +21,7 @@ function CharCreation:new(obj)
 		gender = Constants.EnumGender.F,
 		traits = {
 			[Constants.EnumTrait.SKIN] = 1,
-			[Constants.EnumTrait.EYES] = 1,
+			[Constants.EnumTrait.EYES] = 2,
 			[Constants.EnumTrait.HAIR] = 2,
 		},
 		trait_colors = {
@@ -136,6 +136,7 @@ function CharCreation:draw()
 	love.graphics.setShader(self.shader)
 
 	View.draw(self.sprites.hair.img, self.sprites.hair.quads[character.traits.hair], 60, 150, 0, 0.2)
+	View.draw(self.new_char.model_data.body.img, self.new_char.model_data.body.quads[1], 113, 156, 0, 1/4, 1/4, 150)
 	View.draw(self.sprites.hair.img, self.sprites.hair.f_quads[character.traits.hair], 60, 150, 0, 0.2)
 
 	View.draw(self.new_char.model_data.body.img, self.new_char.model_data.body.quads[1], 115, 280, 0, 1/2, 1/2, 150)
@@ -213,6 +214,7 @@ function CharCreation:draw_trait_picker()
 			View.draw(self.sprites[self.picking_trait].img, self.sprites[self.picking_trait].quads[i], x+50, y-30, 0, 0.4, 0.4, 250)
 		else
 			View.draw(self.sprites[self.picking_trait].img, self.sprites[self.picking_trait].quads[i], x, y, 0, 0.2)
+			View.draw(self.new_char.model_data.body.img, self.new_char.model_data.body.quads[1], x+53, y+6, 0, 1/4, 1/4, 150)
 		end
 	end
 	
@@ -343,6 +345,7 @@ function CharCreation:mousepressed(x,y,k)
 
 		self.sprites.hair.img = love.graphics.newImage('assets/character/Heads.png')
 		self.sprites.eyes.img = love.graphics.newImage('assets/character/Eyes.png')
+		self.new_char.model_data = nil
 
 		--self.disabled = true
 		--self.loading = true

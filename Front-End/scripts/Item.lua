@@ -12,7 +12,8 @@ Item.rarities = {
 --TODO: Currencies as actual items
 Item.currency = {
 	diamond = love.graphics.newImage("assets/items/diamond.png"),
-	gold = love.graphics.newImage("assets/items/gold.png")
+	gold = love.graphics.newImage("assets/items/gold.png"),
+	xp = love.graphics.newImage("assets/items/xp.png")
 }
 
 function Item:new(obj)
@@ -80,6 +81,13 @@ function Item:load_single_icon(cat)
 	
 	Item.icons[self.kind] = love.graphics.newImage(canvas:newImageData())
 	return Item.icons[self.kind]
+end
+
+function Item.draw_currency(x, y, size, currency)
+	View.setColor(Item.rarities[3])
+	View.draw(Item.border_img, x, y, 0, size/100)
+	View.setColor(1,1,1)
+	View.draw(Item.currency[currency], x, y, 0, size/500)
 end
 
 Constants.NoneItem = Item:new({id=-1, kind=0, name="No Item", stats={}})

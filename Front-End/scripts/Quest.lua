@@ -9,10 +9,19 @@ function Quest:new(obj)
 	return obj
 end
 
-function Quest:rewards_list_str(diff)	
-	return (300*diff).." Gold\n"..(500*diff).." XP"
+function Quest:rewards(diff)
+	return {
+		gold = 300*diff,
+		xp = 500*diff
+	}
 end
 
-function Quest:fc_rewards_str(diff)	
-	return (1000*diff).." Gold\n"..(1500*diff).." XP"
+function Quest:rewards_list_str(diff)
+	local rewards = self:rewards(diff)
+	return rewards.gold.." Gold\n"..rewards.xp.." XP"
+end
+
+function Quest:fc_rewards_str(diff)
+	local rewards = self:rewards(diff)
+	return 3*rewards.gold.." Gold\n"..3*rewards.xp.." XP"
 end

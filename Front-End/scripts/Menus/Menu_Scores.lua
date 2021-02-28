@@ -171,10 +171,7 @@ function ScoresMenu:show_selected()
 	View.printf(score.name, 870, 160, 810, "center", 0, 0.5)
 	View.printf(score.score.."/"..score.max, 870, 220, 810, "center", 0, 0.5)
 
-	View.setColor(Item.rarities[3])
-	View.draw(Item.border_img, 995, 300, 0, 1.5)
-	View.setColor(1,1,1)
-	View.draw(Item.currency.diamond, 995, 300, 0, 0.3)
+	Item.draw_currency(995, 300, 150, 'diamond')
 
 	View.printf("x"..score.score*5, 870, 470, 810, "center", 0, 0.5)
 end
