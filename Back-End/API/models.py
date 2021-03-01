@@ -113,6 +113,10 @@ class Player(models.Model):
     def get_stats(self):
         return json.loads(self.stats)
 
+    def level_up(self):
+        self.level += 1
+        self.skills = Skill.objects.filter(level_req__lte=self.level, job_req__in=[None, self.job]).all()
+
 
 class Item(models.Model):
     ITEMTYPE_CHOICES = [
@@ -198,7 +202,7 @@ class QuestInstance(models.Model):
 
                 while player.xp >= xp_to_next:
                     player.xp -= xp_to_next
-                    player.level += 1
+                    player.level_up()
                     xp_to_next = 1250 * (player.level ** 3)
 
                 player.save()
