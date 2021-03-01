@@ -205,9 +205,7 @@ function Map:resolve()
 
 		Alert:new(message, AlertTypes.notification, function()
 			MyLib.FadeToColor(0.25, {function()
-				GameController.go_to_menu():after(function()
-					GameController.unload_map()
-				end)
+				GameController.go_to_menu()
 			end})
 		end)
 	end
