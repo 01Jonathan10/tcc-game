@@ -4,6 +4,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from colorfield.fields import ColorField
 
+from BackEnd import settings
+
 
 class Enemy(models.Model):
     name = models.CharField(max_length=100)
@@ -179,6 +181,19 @@ class QuestInstance(models.Model):
     players = models.ManyToManyField(Player)
 
     def finish(self, victory):
+        if victory:
+            for player in self.players.all():
+                reward_multiplier = 1
+
+                if QuestInstance.objects.filter(
+                        quest=self.quest, difficulty=self.difficulty,
+                        cleared=True).exists():
+                    reward_multiplier = 4
+
+                player.gold += 300*self.difficulty*reward_multiplier
+                player.xp += 500*self.difficulty*reward_multiplier
+                player.save()
+
         self.active = False
         self.cleared = victory
         self.save()
