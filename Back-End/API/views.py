@@ -206,7 +206,7 @@ class TaskList(BaseView):
         player_tasks = models.TaskInstance.objects.filter(task__owner=request.user.player, disabled=False).order_by(
             F("finished").desc(nulls_first=True))
         other_tasks = models.TaskInstance.objects.filter(finished__isnull=False, disabled=False).exclude(
-            task__owner=request.user.player)
+            task__owner=request.user.player).exclude(taskreview__reviewer=request.user.player)
 
         other_tasks = other_tasks.annotate(
             reviewed=Exists(models.TaskReview.objects.filter(task__pk=OuterRef('pk'), reviewer=request.user.player)))
