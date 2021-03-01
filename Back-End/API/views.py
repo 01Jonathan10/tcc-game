@@ -244,8 +244,8 @@ class FinishTask(BaseView):
             t_i.finished = datetime.datetime.now()
             t_i.save()
 
-            t_i.owner.gold += t_i.base_reward()
-            t_i.owner.save()
+            t_i.task.owner.gold += t_i.base_reward()
+            t_i.task.owner.save()
 
             controllers.TaskController.create_next(t_i)
             return Response({})
@@ -272,8 +272,8 @@ class ReviewTask(BaseView):
             player.save()
 
             if request.data.get('positive'):
-                t_i.owner.gold += t_i.base_reward()
-                t_i.owner.save()
+                t_i.task.owner.gold += t_i.base_reward()
+                t_i.task.owner.save()
 
             return Response({})
 
