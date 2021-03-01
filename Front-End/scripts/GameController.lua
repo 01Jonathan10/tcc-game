@@ -27,7 +27,6 @@ function GameController.go_to_menu()
 			GameController.state = Constants.EnumGameState.MENU
 			Textbox:dispose()
 			GameController.player = Player:new(API.translate_player(data))
-			Utils.PrintTb(GameController.player)
 			GameController.menu = MainMenu:new()
 			GameController.unload_map()
 		end})

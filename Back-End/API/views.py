@@ -10,6 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from API.serializers import PlayerSerializer
 from . import controllers
 from . import models
 from . import serializers
@@ -93,7 +94,7 @@ class UpdatePlayer(BaseView):
     def get(self, request):
         controllers.PlayerController.update_player(request.user.player)
 
-        return Response({"energy": request.user.player.energy})
+        return Response(PlayerSerializer(request.user.player).data)
 
 
 class GetSkills(BaseView):
