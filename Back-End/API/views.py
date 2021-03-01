@@ -243,6 +243,10 @@ class FinishTask(BaseView):
 
             t_i.finished = datetime.datetime.now()
             t_i.save()
+
+            t_i.owner.gold += t_i.base_reward()
+            t_i.owner.save()
+
             controllers.TaskController.create_next(t_i)
             return Response({})
 
@@ -263,6 +267,14 @@ class ReviewTask(BaseView):
                 return HttpResponseForbidden()
 
             models.TaskReview.objects.create(task=t_i, reviewer=player, positive=request.data.get('positive'))
+
+            player.gold += t_i.base_reward()
+            player.save()
+
+            if request.data.get('positive'):
+                t_i.owner.gold += t_i.base_reward()
+                t_i.owner.save()
+
             return Response({})
 
         return HttpResponseForbidden()

@@ -236,11 +236,22 @@ class TaskInstance(models.Model):
     created = models.DateTimeField(default=datetime.datetime.now)
     deadline = models.DateTimeField(default=datetime.datetime.now)
 
+    def base_reward(self):
+        if self.task.type in [1, 3]:
+            return 50
+        elif self.task.type == 2:
+            return 100
+        elif self.task.type == 4:
+            return 300
+
 
 class TaskReview(models.Model):
     task = models.ForeignKey(TaskInstance, on_delete=models.CASCADE)
     positive = models.BooleanField()
     reviewer = models.ForeignKey(Player, on_delete=models.SET_NULL, null=True)
+
+    def review_reward(self):
+        return self.task.base_reward()
 
 
 class Semester(models.Model):
