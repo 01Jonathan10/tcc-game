@@ -140,3 +140,6 @@ class TaskController:
             task_instance_model.finished = task_instance_model.created
             task_instance_model.deadline = task_instance_model.created + datetime.timedelta(seconds=1)
             task_instance_model.save()
+
+            task_instance_model.task.owner.gold += task_instance_model.base_reward()
+            task_instance_model.task.owner.save()
