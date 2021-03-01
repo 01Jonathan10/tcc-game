@@ -113,16 +113,6 @@ class Player(models.Model):
     def get_stats(self):
         return json.loads(self.stats)
 
-    def save(self, **kwargs):
-        xp_to_next = 5000*self.level*self.level*self.level/4
-
-        while self.xp >= xp_to_next:
-            self.xp -= xp_to_next
-            self.level += 1
-            xp_to_next = 1250 * (self.level ** 3)
-
-        super().save(self, **kwargs)
-
 
 class Item(models.Model):
     ITEMTYPE_CHOICES = [
@@ -203,6 +193,14 @@ class QuestInstance(models.Model):
 
                 player.gold += 300*self.difficulty*reward_multiplier
                 player.xp += 500*self.difficulty*reward_multiplier
+
+                xp_to_next = 5000 * player.level * player.level * player.level / 4
+
+                while player.xp >= xp_to_next:
+                    player.xp -= xp_to_next
+                    player.level += 1
+                    xp_to_next = 1250 * (player.level ** 3)
+
                 player.save()
 
         self.active = False
