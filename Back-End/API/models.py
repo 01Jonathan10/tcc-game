@@ -182,10 +182,11 @@ class QuestInstance(models.Model):
 
     def finish(self, victory):
         if victory:
+
             for player in self.players.all():
                 reward_multiplier = 1
 
-                if QuestInstance.objects.filter(
+                if not QuestInstance.objects.filter(
                         quest=self.quest, difficulty=self.difficulty,
                         cleared=True).exists():
                     reward_multiplier = 4
