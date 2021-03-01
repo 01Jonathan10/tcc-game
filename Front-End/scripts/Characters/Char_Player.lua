@@ -35,7 +35,7 @@ function Player:new(obj)
 end
 
 function Player:xp_to_next()
-	return 500*self.level*self.level*self.level/4
+	return 5000*self.level*self.level*self.level/4
 end
 
 function Player:unload_model()
