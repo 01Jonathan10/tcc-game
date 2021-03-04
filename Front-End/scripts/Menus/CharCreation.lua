@@ -60,12 +60,12 @@ function CharCreation:new(obj)
 		}
 	}
 	
-	for i =0,8 do
+	for i =0,2 do
 		table.insert(obj.sprites.hair.quads, View.newQuad(0, i*500, 500, 500, 1000, 4500))
 		table.insert(obj.sprites.hair.f_quads, View.newQuad(500, i*500, 500, 500, 1000, 4500))
 	end
 	
-	for i=0,8 do
+	for i=0,1 do
 		table.insert(obj.sprites.eyes.quads, View.newQuad((i%4)*500, math.floor(i/4)*500, 500, 500, 2000, 1500))
 	end
 	
@@ -342,23 +342,16 @@ function CharCreation:mousepressed(x,y,k)
 	end
 	
 	if x >= 970 and x <= 1210 and y >= 630 and y <= 690 then
-
-		--TODO Uncomment
-
-		self.sprites.hair.img = love.graphics.newImage('assets/character/Heads.png')
-		self.sprites.eyes.img = love.graphics.newImage('assets/character/Eyes.png')
-		self.new_char.model_data = nil
-
-		--self.disabled = true
-		--self.loading = true
-		--local new_char = self.new_char
-		--API.create_player(new_char):success(function(response)
-		--	GameController.go_to_menu()
-		--end):fail(function(data)
-		--	Alert:new("Name must be filled", AlertTypes.error)
-		--	self.disabled = false
-		--end):after(function()
-		--	self.loading = false
-		--end)
+		self.disabled = true
+		self.loading = true
+		local new_char = self.new_char
+		API.create_player(new_char):success(function(response)
+			GameController.go_to_menu()
+		end):fail(function(data)
+			Alert:new("Name must be filled", AlertTypes.error)
+			self.disabled = false
+		end):after(function()
+			self.loading = false
+		end)
 	end	
 end
