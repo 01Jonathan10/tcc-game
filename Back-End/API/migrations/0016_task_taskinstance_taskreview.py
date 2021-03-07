@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
             name='TaskInstance',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('finished', models.BooleanField()),
+                ('finished', models.DateTimeField(null=True)),
                 ('created', models.DateTimeField(default=datetime.datetime.now)),
                 ('task', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='API.Task')),
             ],

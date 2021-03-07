@@ -9,10 +9,4 @@ class Migration(migrations.Migration):
         ('API', '0028_taskinstance_disabled'),
     ]
 
-    operations = [
-        migrations.AlterField(
-            model_name='taskinstance',
-            name='finished',
-            field=models.DateTimeField(null=True),
-        ),
-    ]
+    operations = []
