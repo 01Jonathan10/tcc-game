@@ -36,7 +36,7 @@ class Skill(models.Model):
     name = models.CharField(max_length=20)
     effect = models.TextField(max_length=200)
     description = models.TextField(max_length=200)
-    range = models.CharField(max_length=30)
+    range = models.CharField(max_length=90)
     anim_id = models.IntegerField(choices=ANIMATION_TRIGGER)
     level_req = models.IntegerField(default=1)
     job_req = models.ForeignKey(PlayerClass, on_delete=models.CASCADE, null=True, blank=True)
