@@ -116,15 +116,15 @@ function Map:draw_UI()
 	
 	local x = 140 + (20-table.getn(self.turn_order))*25
 	
-	-- Turn Order
-	for idx, character in ipairs(self.turn_order) do
-		if self.turn_order[self.turn] == character then
-			View.rectangle("line", x + 50*(idx-1), 660, 50, 50)
-			View.circle("fill", x + 50*(idx-1)+25, 630, 10)
-		else
-			View.rectangle("line", x + 10 + 50*(idx-1), 680, 30, 30)
-		end
-	end
+	-- -- Turn Order
+	--for idx, character in ipairs(self.turn_order) do
+	--	if self.turn_order[self.turn] == character then
+	--		View.rectangle("line", x + 50*(idx-1), 660, 50, 50)
+	--		View.circle("fill", x + 50*(idx-1)+25, 630, 10)
+	--	else
+	--		View.rectangle("line", x + 10 + 50*(idx-1), 680, 30, 30)
+	--	end
+	--end
 	
 	-- Player info
 	character = GameController.player

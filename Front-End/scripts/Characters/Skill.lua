@@ -25,9 +25,11 @@ end
 
 function Skill:translate_response(skill_data)
 	local skill_list = {}
+	local skill
 		
-	for _, each in ipairs(skill_data) do	
-		table.insert(skill_list, Skill:new(each))
+	for _, each in ipairs(skill_data) do
+		skill = Skill:new(each)
+		skill_list[skill.id] = skill
 	end
 	
 	return skill_list

@@ -72,7 +72,7 @@ class CreatePlayer(BaseView):
         basic_attack = models.Skill.objects.get(pk=1)
         player.save()
         player.skills.add(basic_attack)
-        player.skills.add(models.Skill.objects.filter(level_req__lte=1, job_req=player.job))
+        player.skills.add(*models.Skill.objects.filter(level_req__lte=1, job_req=player.job).all())
 
         controllers.PlayerController.gain_starting_items(player)
 

@@ -21,22 +21,6 @@ function GameController.login(player)
 end
 
 function GameController.go_to_menu()
-	return API.get_player():success(function(data)
-		MyLib.FadeToColor(0.25, {function()
-			GameController.login_screen = nil
-			GameController.state = Constants.EnumGameState.MENU
-			Textbox:dispose()
-			GameController.player = Player:new(API.translate_player(data))
-			GameController.menu = MainMenu:new()
-			GameController.unload_map()
-		end})
-	end):fail(function(data)
-		API.error(data)
-		GameController.player = Character:new({})
-	end)
-end
-
-function GameController.go_to_menu()
 	GameController.loading = true
 	API.get_player():success(function(data)
 		MyLib.FadeToColor(0.25, {function()
