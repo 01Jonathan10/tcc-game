@@ -195,7 +195,7 @@ function ItemsMenu:show()
 				color = {0.5,0,0}
 				sign = '' 
 			end
-			View.print({color, verbose[stat]..": "..sign..value}, 940 + 160*(index%2), 340+50*math.floor(index/2), 0, 2/5)
+			View.print({color, verbose[stat]..": "..sign..value}, 940 + 160*(index%2), 340+35*math.floor(index/2), 0, 2/5)
 			index = index + 1
 		end
 		
