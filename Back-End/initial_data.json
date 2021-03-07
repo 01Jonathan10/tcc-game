@@ -39,7 +39,7 @@
     "fields": {
       "name": "Fireball",
       "effect": "{\"type\": \"damage\", \"dmg_type\":2, \"power\": 60}",
-      "description": "The User hurls a ball of flames at a distance, causing magic damage.",
+      "description": "The user hurls a ball of flames at a distance, causing magic damage.",
       "range": "F3,F2,F4,F3L1,F3R1",
       "anim_id": 2,
       "level_req": 1,
@@ -47,69 +47,95 @@
     }
   },
   {
+    "model": "API.skill",
+    "pk": 3,
+    "fields": {
+      "name": "Cleave",
+      "effect": "{\"type\": \"damage\", \"dmg_type\":1, \"power\": 40}",
+      "description": "The user rotates their weapon around them, attacking all oponents around.",
+      "range": "F1,F1L1,F1R1,R1,L1,B1,B1R1,B1L1",
+      "anim_id": 1,
+      "level_req": 1,
+      "job_req": 2
+    }
+  },
+  {
+    "model": "API.skill",
+    "pk": 4,
+    "fields": {
+      "name": "Critical Strike",
+      "effect": "{\"type\": \"damage\", \"dmg_type\":1, \"power\": 90}",
+      "description": "The user hits a weak spot, dealing massive damage to an enemy",
+      "range": "F1",
+      "anim_id": 1,
+      "level_req": 1,
+      "job_req": 3
+    }
+  },
+  {
     "model": "API.item",
     "pk": 1,
     "fields": {
-      "name": "Mage's Hat",
+      "name": "Mage's Ribbon (F)",
       "type": 2,
       "wpn_type": 0,
-      "price": 100,
-      "stats": "{}"
+      "price": 1000,
+      "stats": "{\"mdef\": 10}"
     }
   },
   {
     "model": "API.item",
     "pk": 2,
     "fields": {
-      "name": "Mage's Robe",
+      "name": "Mage's Robe (F)",
       "type": 3,
       "wpn_type": 0,
-      "price": 100,
-      "stats": "{}"
+      "price": 1000,
+      "stats": "{\"mdef\": 10}"
     }
   },
   {
     "model": "API.item",
     "pk": 3,
     "fields": {
-      "name": "Knight's Helm",
+      "name": "Knight's Helm (F)",
       "type": 2,
       "wpn_type": 0,
-      "price": 100,
-      "stats": "{}"
+      "price": 1000,
+      "stats": "{\"def\": 10}"
     }
   },
   {
     "model": "API.item",
     "pk": 4,
     "fields": {
-      "name": "Knight's Armor",
+      "name": "Knight's Armor (F)",
       "type": 3,
       "wpn_type": 0,
-      "price": 100,
-      "stats": "{}"
+      "price": 1000,
+      "stats": "{\"def\": 10}"
     }
   },
   {
     "model": "API.item",
     "pk": 5,
     "fields": {
-      "name": "Thief's Hat",
+      "name": "Thief's Hat (F)",
       "type": 2,
       "wpn_type": 0,
-      "price": 100,
-      "stats": "{}"
+      "price": 1000,
+      "stats": "{\"mdef\": 5, \"def\": 5}"
     }
   },
   {
     "model": "API.item",
     "pk": 6,
     "fields": {
-      "name": "Thief's Clothes",
+      "name": "Thief's Clothes (F)",
       "type": 3,
       "wpn_type": 0,
-      "price": 100,
-      "stats": "{}"
+      "price": 1000,
+      "stats": "{\"mdef\": 5, \"def\": 5}"
     }
   },
   {
@@ -119,8 +145,8 @@
       "name": "Mage's Staff",
       "type": 1,
       "wpn_type": 5,
-      "price": 100,
-      "stats": "{}"
+      "price": 2500,
+      "stats": "{\"matk\": 10, \"atk\": -5}"
     }
   },
   {
@@ -130,8 +156,8 @@
       "name": "Thief's Daggers",
       "type": 1,
       "wpn_type": 2,
-      "price": 100,
-      "stats": "{}"
+      "price": 2500,
+      "stats": "{\"atk\": 5, \"matk\": -5, \"speed\": 5}"
     }
   },
   {
@@ -141,16 +167,82 @@
       "name": "Knight's Sword",
       "type": 1,
       "wpn_type": 1,
-      "price": 100,
-      "stats": "{\"atk\": 10, \"matk\": 0}"
+      "price": 2500,
+      "stats": "{\"atk\": 10, \"matk\": -5}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 10,
+    "fields": {
+      "name": "Mage's Hat (M)",
+      "type": 2,
+      "wpn_type": 0,
+      "price": 1000,
+      "stats": "{\"mdef\": 10}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 11,
+    "fields": {
+      "name": "Mage's Robe (M)",
+      "type": 3,
+      "wpn_type": 0,
+      "price": 1000,
+      "stats": "{\"mdef\": 10}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 12,
+    "fields": {
+      "name": "Knight's Helm (M)",
+      "type": 2,
+      "wpn_type": 0,
+      "price": 1000,
+      "stats": "{\"def\": 10}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 13,
+    "fields": {
+      "name": "Knight's Armor (M)",
+      "type": 3,
+      "wpn_type": 0,
+      "price": 1000,
+      "stats": "{\"def\": 10}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 14,
+    "fields": {
+      "name": "Thief's Hat (M)",
+      "type": 2,
+      "wpn_type": 0,
+      "price": 1000,
+      "stats": "{\"mdef\": 5, \"def\": 5}"
+    }
+  },
+  {
+    "model": "API.item",
+    "pk": 15,
+    "fields": {
+      "name": "Thief's Clothes (M)",
+      "type": 3,
+      "wpn_type": 0,
+      "price": 1000,
+      "stats": "{\"mdef\": 5, \"def\": 5}"
     }
   },
   {
     "model": "API.quest",
     "pk": 1,
     "fields": {
-      "name": "First Quest",
-      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eu tellus rutrum velit porttitor interdum. Integer ultrices egestas neque quis convallis. Curabitur egestas lorem in semper porta. In ut urna molestie, sagittis dolor sit amet, cursus metus. Quisque eu risus blandit, volutpat mi eget, pellentesque neque. Phasellus pharetra, urna non consectetur suscipit, ante ligula molestie dolor, sed mattis sem augue a purus. Nunc vel posuere lacus, ut viverra mauris. Nullam semper ornare sagittis. Pellentesque ac vestibulum risus. Praesent dignissim blandit orci eu suscipit. Aliquam erat volutpat. Vestibulum blandit libero ac eros ullamcorper, eget laoreet tortor pharetra. Orci varius natoque penatibus.",
+      "name": "Demo Quest",
+      "description": "This is a simple demo quest. When the full game is finished, there will be a lot more!",
       "base_energy": 10,
       "diff_modifier": 10,
       "map_id": 1
