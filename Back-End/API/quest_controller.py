@@ -10,6 +10,7 @@ from .constants import ObjType, DmgType
 from .models import QuestInstance, Skill
 
 
+# noinspection PyTypeChecker
 class QuestController:
     board_state = None
 
@@ -98,6 +99,12 @@ class QuestController:
 
         for i, enemy in enumerate(map_data['enemies']):
             data = QuestController.get_enemy_stats(enemy['id'])
+
+            if q_i.difficulty == 1:
+                data['stats']['hp'] = data['stats']['hp'] / 2
+            elif q_i.difficulty == 3:
+                data['stats']['hp'] = data['stats']['hp'] * 2
+
             board['objects'].append({
                 "type": ObjType.ENEMY,
                 "position": {"x": enemy['position'][0], "y": enemy['position'][1]},
@@ -213,7 +220,8 @@ class QuestController:
         with open(path, 'w') as file:
             json.dump(self.board_state, file)
 
-    def get_skill_range(self, character, skill, direction):
+    @staticmethod
+    def get_skill_range(character, skill, direction):
         origin = {"x": character["position"]["x"], "y": character["position"]["y"]}
         instr = {"F": 0, "R": 1, "B": 2, "L": 3}
         elems = skill.range.split(",")
