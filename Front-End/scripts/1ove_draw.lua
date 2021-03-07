@@ -17,6 +17,8 @@ function love.draw()
 		GameController.login_screen:draw()
 	elseif GameController.state == Constants.EnumGameState.CREATION then
 		GameController.char_creation:draw()
+	elseif GameController.state == Constants.EnumGameState.TUTORIAL then
+		GameController.tutorial:draw()
 	end
 	
 	View.setColor(1,1,1)

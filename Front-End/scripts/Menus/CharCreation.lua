@@ -346,7 +346,7 @@ function CharCreation:mousepressed(x,y,k)
 		self.loading = true
 		local new_char = self.new_char
 		API.create_player(new_char):success(function(response)
-			GameController.go_to_menu()
+			GameController.go_to_tutorial()
 		end):fail(function(data)
 			Alert:new("Name must be filled", AlertTypes.error)
 			self.disabled = false

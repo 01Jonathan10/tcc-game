@@ -52,6 +52,7 @@ Constants.EnumGameState = {
 	QUEST = 1,
 	LOGIN = 2,
 	CREATION = 3,
+	TUTORIAL = 4,
 }
 	
 Constants.EnumSubmenu = {

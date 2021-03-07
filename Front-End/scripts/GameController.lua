@@ -25,6 +25,8 @@ function GameController.go_to_menu()
 	API.get_player():success(function(data)
 		MyLib.FadeToColor(0.25, {function()
 			GameController.login_screen = nil
+			GameController.char_creation = nil
+			GameController.tutorial = nil
 			GameController.state = Constants.EnumGameState.MENU
 			Textbox:dispose()
 			GameController.player = Player:new(API.translate_player(data))
@@ -36,6 +38,16 @@ function GameController.go_to_menu()
 	end):after(function()
 		GameController.loading = nil
 	end)
+end
+
+function GameController.go_to_tutorial()
+	MyLib.FadeToColor(0.25, {function()
+		GameController.login_screen = nil
+		GameController.char_creation = nil
+		GameController.state = Constants.EnumGameState.TUTORIAL
+		GameController.tutorial = Tutorial:new()
+		Textbox:dispose()
+	end})
 end
 
 function GameController.start_quest(quest, diff, actions)

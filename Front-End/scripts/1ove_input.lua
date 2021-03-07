@@ -20,6 +20,8 @@ function love.mousepressed(x, y, k)
 		GameController.login_screen:mousepressed(x, y, k)
 	elseif GameController.state == Constants.EnumGameState.CREATION and k==1 then
 		GameController.char_creation:mousepressed(x, y, k)
+	elseif GameController.state == Constants.EnumGameState.TUTORIAL then
+		GameController.tutorial:click()
 	end
 	
 	if Textbox.list then Textbox.mouseclick(x,y,k) end
