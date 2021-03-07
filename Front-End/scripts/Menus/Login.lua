@@ -8,7 +8,7 @@ function Login:new(obj)
 	
 	Textbox:init()
 	obj.login_box = Textbox:new("login",390,310,500,50, {1,0.5,0.5})
-	obj.pass_box = Textbox:new("password",390,450,500,50, {1,0.5,0.5})
+	obj.pass_box = Textbox:new("password",390,450,500,50, {1,0.5,0.5}, nil, true)
 	
 	obj.login_box:trigger()
 	

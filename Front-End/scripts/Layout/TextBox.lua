@@ -13,7 +13,7 @@ function Textbox:dispose()
 	Textbox.active_box = nil
 end
 
-function Textbox:new(name, x, y, width, height, color, lines)
+function Textbox:new(name, x, y, width, height, color, lines, is_password)
 	local box = {
 		name = name,
 		x = x,
@@ -27,6 +27,7 @@ function Textbox:new(name, x, y, width, height, color, lines)
 		active = false,
 		cursor = 0,
 		index = #Textbox.list + 1,
+		is_password = is_password or nil
 	}
 	
 	setmetatable(box, self)
@@ -44,7 +45,14 @@ function Textbox:draw()
 	View.rectangle("fill",self.x,self.y,self.width,self.height)
 	View.setColor(1,1,1)
 	local size = self.height/(self.lines or 1)
-	View.printf(self.text,self.x+size/10,self.y+size/10, self.width*250/(size*3), "left", 0, size*3/250)
+	local text = self.text
+	if self.is_password then
+		text = ""
+		for _ = 1,#self.text do
+			text = "*"..text
+		end
+	end
+	View.printf(text,self.x+size/10,self.y+size/10, self.width*250/(size*3), "left", 0, size*3/250)
 end
 
 function Textbox:textinput(t)

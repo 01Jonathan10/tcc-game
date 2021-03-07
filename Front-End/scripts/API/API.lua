@@ -1,4 +1,4 @@
-API.server_domain = "http://127.0.0.1:8000"
+API.server_domain = "https://tcc-quest-for-the-degree.herokuapp.com/"
 
 API.channel = love.thread.getChannel("taskChannel")
 API.r_channel = love.thread.getChannel("responseChannel")
