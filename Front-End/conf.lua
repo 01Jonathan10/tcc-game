@@ -7,6 +7,6 @@ function love.conf(t)
 	t.window.fullscreen = true
 	
 	-- For Windows debugging
-	t.console = true
+	t.console = false
 	is_debug = t.console
 end

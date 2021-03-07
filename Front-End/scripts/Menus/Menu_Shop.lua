@@ -154,6 +154,8 @@ function ShopMenu:buy_item()
 		GameController.player.gold = GameController.player.gold - self.selection.price
 		self.selection.bought = true
 		self.selection = nil
+	end):fail(function()
+		Alert:new("Can't buy Item!", AlertTypes.error)
 	end):after(function()
 		self.loading = nil
 		self.buttons[1].disabled = false

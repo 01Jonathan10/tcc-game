@@ -113,7 +113,7 @@ function MainMenu:request_update()
 	API.update_player():success(function(data)
 		GameController.player.energy = data.energy or GameController.player.energy
 		GameController.player.gold = data.gold or GameController.player.gold
-		GameController.player.diamonds = data.gold or GameController.player.diamonds
+		GameController.player.diamonds = data.diamonds or GameController.player.diamonds
 		GameController.player.xp = data.gold or GameController.player.xp
 	end)
 end
