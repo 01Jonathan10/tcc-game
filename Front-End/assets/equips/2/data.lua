@@ -1,11 +1,9 @@
 return {
 	replace_parts = {
-		[Constants.EnumBodyPart.ARM_1] = true,
 		[Constants.EnumBodyPart.LEG_B_1] = true,
 		[Constants.EnumBodyPart.LEG_B_2] = true,
 		[Constants.EnumBodyPart.FEET_1] = true,
 		[Constants.EnumBodyPart.FEET_2] = true,
-		[Constants.EnumBodyPart.BODY] = true,
 	},
 	
 	draw_over = {

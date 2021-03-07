@@ -1,3 +1,3 @@
 return {
-	type = Constants.EnumHatType.HAT,
+	type = Constants.EnumHatType.NONE,
 }
