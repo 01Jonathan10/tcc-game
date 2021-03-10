@@ -86,21 +86,7 @@ function MainMenu:update(dt)
 	self.frame = math.floor(self.timer)%120 + 1
 end
 
-function MainMenu:click(x,y,k)	
-	if self.disabled then return end
-	
-	local col, lin
-	local selection
-	
-	if (x>=930 and x<=1230 and (x-930)%180<=120) then 
-		col = math.floor((x-930)/180) 
-		if (y>=100 and y<=670 and (y-100)%150<=120) then 
-			lin = math.floor((y+50)/150)
-			selection = 4*col + lin + 1
-			self:setMenu(selection)
-		end
-	end
-end
+function MainMenu:click(x,y,k) end
 
 function MainMenu:setMenu(selection)
 	self.disabled = true

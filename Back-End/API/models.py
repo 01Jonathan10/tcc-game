@@ -115,7 +115,7 @@ class Player(models.Model):
 
     def level_up(self):
         self.level += 1
-        self.skills = Skill.objects.filter(level_req__lte=self.level, job_req__in=[None, self.job]).all()
+        self.skills.set(Skill.objects.filter(level_req__lte=self.level, job_req__in=[None, self.job]).all())
 
 
 class Item(models.Model):
