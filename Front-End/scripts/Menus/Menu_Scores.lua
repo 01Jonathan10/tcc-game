@@ -105,7 +105,7 @@ function ScoresMenu:claim_score_btn(score)
 		}
 	else
 		return {
-			x = 750,y = 122 + #self.buttons*30, w = 80, h = 25, text={{0,0,0,1}, ("Claim"):translate()},
+			x = 730,y = 122 + #self.buttons*30, w = 80, h = 25, text={{0,0,0,1}, ("Claim"):translate()},
 			click = function() self:select_score(score) end, text_size = 1.7
 		}
 	end
