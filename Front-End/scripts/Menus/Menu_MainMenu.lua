@@ -100,6 +100,6 @@ function MainMenu:request_update()
 		GameController.player.energy = data.energy or GameController.player.energy
 		GameController.player.gold = data.gold or GameController.player.gold
 		GameController.player.diamonds = data.diamonds or GameController.player.diamonds
-		GameController.player.xp = data.gold or GameController.player.xp
+		GameController.player.xp = data.xp or GameController.player.xp
 	end)
 end
